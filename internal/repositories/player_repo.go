@@ -20,6 +20,7 @@ func CreatePlayer_Repo(ctx context.Context, steamID string, username string) (st
 	err := database.DB.QueryRow(ctx, query, steamID, username).Scan(&playerID)
 
 	if err != nil {
+		fmt.Printf("Error creating player: %v\n", err)
 		return "", err
 	}
 
@@ -36,33 +37,11 @@ func CreatePlayerAbilities_Repo(ctx context.Context, playerID string) error {
 
 	_, err := database.DB.Exec(ctx, query, playerID)
 
-	return err
-}
-
-func GetPlayerByUsername(ctx context.Context, username string) (*models.Player, error) {
-	query := `
-	SELECT player_id, username
-	FROM players
-	WHERE username=$1
-	`
-
-	row := database.DB.QueryRow(ctx, query, username)
-
-	var player models.Player
-
-	err := row.Scan(
-		&player.PlayerID,
-		&player.Username,
-		&player.MainAbility,
-		&player.SubAbilities,
-	)
-
 	if err != nil {
-		fmt.Printf("Error fetching player: %v\n", err)
-		return nil, err
+		fmt.Printf("Error creating player abilities: %v\n", err)
 	}
 
-	return &player, nil
+	return err
 }
 
 func GetAllPlayersLoadOut_Repo(ctx context.Context) ([]models.PlayerAdmin, error) {

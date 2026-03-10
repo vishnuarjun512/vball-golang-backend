@@ -1,7 +1,3 @@
-1️⃣ README.md (Clean & Professional)
-
-Copy this directly.
-
 # Volleyball Game Backend
 
 Backend service for a **multiplayer volleyball game** built with Go.

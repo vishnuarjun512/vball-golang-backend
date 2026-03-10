@@ -1,3 +1,225 @@
+# PostgreSQL Commands
+
+Connect to your container:
+
+```
+docker exec -it vball-postgres psql -U postgres -d volleyball
+```
+
+Then inside:
+
+```
+\dt
+\d players
+SELECT * FROM players;
+```
+
+### Navigation Commands
+
+- List all databases
+
+```
+\l
+```
+
+or
+
+```
+\list
+```
+
+### Connect to another database
+
+```
+\c database_name
+```
+
+Example:
+
+```
+\c volleyball
+```
+
+### Show current database
+
+```
+SELECT current_database();
+```
+
+## Table Inspection
+
+### Show tables
+
+```
+\dt
+```
+
+### Show table structure
+
+```
+\d table_name
+```
+
+Example:
+
+```
+\d players
+```
+
+Shows:
+
+- columns
+- types
+- indexes
+- constraints
+
+Show indexes:
+
+- \di
+
+Show sequences:
+
+- \ds
+
+Show views:
+
+- \dv
+
+3. Query Data
+   Show all rows
+
+```
+SELECT * FROM players;
+```
+
+Limit results
+
+```
+SELECT * FROM players LIMIT 10
+```
+
+Filter rows
+
+```
+SELECT * FROM players WHERE steam_id = 123;
+```
+
+Count rows
+
+```
+SELECT COUNT(*) FROM players;
+```
+
+### Insert / Update / Delete
+
+##### Insert player
+
+```
+INSERT INTO players (steam_id, username)
+VALUES (123456, 'Vishnu');
+```
+
+##### Update player
+
+```
+UPDATE players
+SET username = 'NewName'
+WHERE steam_id = 123456;
+```
+
+##### Delete player
+
+```
+DELETE FROM players
+WHERE steam_id = 123456;
+```
+
+### Table Management
+
+##### Create table
+
+```
+CREATE TABLE players (
+    steam_id BIGINT PRIMARY KEY,
+    username TEXT
+);
+```
+
+##### Delete table
+
+```
+DROP TABLE players;
+Empty table (keep structure)
+TRUNCATE TABLE players;
+```
+
+### Search in tables
+
+Very useful command:
+
+```
+\d
+```
+
+Shows all relations.
+
+#### Show schemas
+
+```
+\dn
+```
+
+#### Show roles (users)
+
+```
+\du
+```
+
+#### Command history
+
+```
+Press:
+↑ arrow key
+```
+
+to see previous commands.
+
+#### Help commands
+
+Show psql help:
+
+```
+\?
+```
+
+Show SQL help:
+
+```
+\h
+```
+
+Example:
+
+```
+\h SELECT
+```
+
+### Formatting output
+
+Turn expanded output on (very useful):
+
+```
+\x
+```
+
+Now large rows display vertically.
+
+### Exit psql
+
+```
+\q
+```
+
 # Database Schema
 
 ## players
