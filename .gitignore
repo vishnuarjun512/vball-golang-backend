@@ -1,0 +1,79 @@
+# =========================
+# Go build files
+# =========================
+bin/
+build/
+dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go test files
+*.test
+*.out
+
+# Go workspace files
+go.work
+go.work.sum
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.local
+.env.development
+.env.production
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+tmp/
+
+# =========================
+# Docker
+# =========================
+docker-data/
+docker-volumes/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE / Editors
+# =========================
+
+# VSCode
+.vscode/
+
+# JetBrains
+.idea/
+
+# Neovim swap files
+*.swp
+*.swo
+
+# =========================
+# Air hot reload temp files
+# =========================
+tmp/
+.air/
+
+# =========================
+# Coverage reports
+# =========================
+coverage.out
+coverage.html
+
+# =========================
+# Misc
+# =========================
+*.pid
+*.seed
+*.lock
