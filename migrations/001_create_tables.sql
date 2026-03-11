@@ -23,7 +23,7 @@ CREATE TABLE main_abilities (
     name TEXT UNIQUE NOT NULL,
     description TEXT,
 
-    ability_type TEXT,
+    type TEXT ,
     tier TEXT,
 
     duration FLOAT DEFAULT 0,

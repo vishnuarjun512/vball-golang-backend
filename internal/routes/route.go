@@ -2,33 +2,34 @@ package routes
 
 import (
 	"vball/internal/handlers"
+	ability "vball/internal/handlers/abilities"
 
 	"github.com/gin-gonic/gin"
 )
 
 func SetupRoutes(router *gin.Engine) {
 
+	// ADMIN ROUTES (dashboard)
+	admin := router.Group("/abilities")
+	{
+		admin.POST("/main", ability.CreateMainAbility)
+		admin.GET("/main", ability.GetMainAbilities)
+		admin.GET("/main/:id", ability.GetMainAbility)
+		admin.PATCH("/main/:id", ability.UpdateMainAbility)
+		admin.DELETE("/main/:id", ability.DeleteMainAbility)
+
+		admin.POST("/sub", ability.CreateSubAbility)
+		admin.GET("/sub", ability.GetSubAbilities)
+		admin.GET("/sub/:id", ability.GetSubAbility)
+		admin.PATCH("/sub/:id", ability.UpdateSubAbility)
+		admin.DELETE("/sub/:id", ability.DeleteSubAbility)
+	}
+
 	// PLAYER ROUTES
 	player := router.Group("/admin")
 	{
 		player.GET("/", handlers.GetAllPlayersLoadOut_Handler)
 		player.GET("/players/:steamid", handlers.GetPlayerBySteamID_Handler)
-	}
-
-	// ADMIN ROUTES (dashboard)
-	admin := router.Group("/abilities")
-	{
-		admin.POST("/main", handlers.CreateMainAbility)
-		admin.GET("/main", handlers.GetMainAbilities)
-		admin.GET("/main/:id", handlers.GetMainAbility)
-		admin.PATCH("/main/:id", handlers.UpdateMainAbility)
-		admin.DELETE("/main/:id", handlers.DeleteMainAbility)
-
-		admin.POST("/sub", handlers.CreateSubAbility)
-		admin.GET("/sub", handlers.GetSubAbilities)
-		admin.GET("/sub/:id", handlers.GetSubAbility)
-		admin.PATCH("/sub/:id", handlers.UpdateSubAbility)
-		admin.DELETE("/sub/:id", handlers.DeleteSubAbility)
 	}
 
 	// GAME RUNTIME ROUTES

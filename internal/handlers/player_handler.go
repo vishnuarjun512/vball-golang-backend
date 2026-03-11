@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	"vball/internal/services"
@@ -17,7 +19,21 @@ func GetAllPlayersLoadOut_Handler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, players)
+	mainAbilities, subAbilities, err := services.GetAllAbilities()
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to load abilities",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"players":       players,
+		"mainAbilities": mainAbilities,
+		"subAbilities":  subAbilities,
+	})
+
 }
 
 func GetPlayerBySteamID_Handler(c *gin.Context) {

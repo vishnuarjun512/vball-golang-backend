@@ -1,7 +1,7 @@
 -- MAIN ABILITIES
 
 INSERT INTO main_abilities
-(name, description, ability_type, tier, duration, cooldown,
+(name, description, type, tier, duration, cooldown,
 spike_modifier, jump_modifier, set_modifier, receive_modifier, ball_force_modifier)
 
 VALUES
