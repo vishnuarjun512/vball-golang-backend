@@ -24,7 +24,7 @@ func main() {
 
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}))
@@ -33,6 +33,7 @@ func main() {
 
 	// Get port (default 8080)
 	port := os.Getenv("PORT")
+	fmt.Println("Port from env:", port)
 	if port == "" {
 		port = "8080"
 	}

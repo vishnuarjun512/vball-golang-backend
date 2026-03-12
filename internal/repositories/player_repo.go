@@ -44,7 +44,7 @@ func CreatePlayerAbilities_Repo(ctx context.Context, playerID string) error {
 	return err
 }
 
-func GetAllPlayersLoadOut_Repo(ctx context.Context) ([]models.PlayerAdmin, error) {
+func GetAdminLoadout_Repo(ctx context.Context) ([]models.PlayerAdmin, error) {
 
 	query := `
 	SELECT

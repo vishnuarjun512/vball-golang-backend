@@ -6,8 +6,12 @@ import (
 	"vball/internal/repositories"
 )
 
-func CreateMainAbility(ability models.MainAbility) error {
-	return repositories.CreateMainAbility(context.Background(), ability)
+func CreateMainAbility(ability models.CreateAbilityRequest) (*models.MainAbility, error) {
+	createdAbility, err := repositories.CreateMainAbility(context.Background(), ability)
+	if err != nil {
+		return nil, err
+	}
+	return createdAbility, nil
 }
 
 func GetMainAbilities() ([]models.MainAbility, error) {

@@ -6,9 +6,9 @@ import (
 	"vball/internal/repositories"
 )
 
-func GetAllPlayersLoadOut_Service() ([]models.PlayerAdmin, error) {
+func GetAdminLoadOut_Service() ([]models.PlayerAdmin, error) {
 
-	return repositories.GetAllPlayersLoadOut_Repo(context.Background())
+	return repositories.GetAdminLoadout_Repo(context.Background())
 }
 
 func GetPlayerBySteamID_Service(steamID string) (*models.PlayerAdmin, error) {

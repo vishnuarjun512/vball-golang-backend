@@ -28,7 +28,7 @@ func SetupRoutes(router *gin.Engine) {
 	// PLAYER ROUTES
 	player := router.Group("/admin")
 	{
-		player.GET("/", handlers.GetAllPlayersLoadOut_Handler)
+		player.GET("", handlers.GetAdminLoadOut_Handler)
 		player.GET("/players/:steamid", handlers.GetPlayerBySteamID_Handler)
 	}
 

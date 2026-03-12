@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"strconv"
 
 	"vball/internal/models"
@@ -11,21 +12,24 @@ import (
 
 func CreateMainAbility(c *gin.Context) {
 
-	var ability models.MainAbility
+	var newAbility models.CreateAbilityRequest
 
-	if err := c.BindJSON(&ability); err != nil {
+	if err := c.ShouldBindJSON(&newAbility); err != nil {
+		fmt.Println("Error binding JSON:", err)
 		c.JSON(400, gin.H{"error": "invalid request"})
 		return
 	}
 
-	err := services.CreateMainAbility(ability)
+	createdAbility, err := services.CreateMainAbility(newAbility)
 
 	if err != nil {
+		fmt.Println("Error creating main ability:", err)
 		c.JSON(500, gin.H{"error": "creation failed"})
 		return
 	}
 
-	c.JSON(200, gin.H{"message": "ability created"})
+	fmt.Println("Main ability created successfully")
+	c.JSON(200, gin.H{"message": "ability created", "ability": createdAbility})
 }
 
 func GetMainAbilities(c *gin.Context) {
@@ -33,10 +37,12 @@ func GetMainAbilities(c *gin.Context) {
 	abilities, err := services.GetMainAbilities()
 
 	if err != nil {
+		fmt.Println("Error fetching main abilities:", err)
 		c.JSON(500, gin.H{"error": "failed"})
 		return
 	}
 
+	fmt.Println("Main abilities fetched successfully")
 	c.JSON(200, abilities)
 }
 
@@ -65,11 +71,13 @@ func UpdateMainAbility(c *gin.Context) {
 	err := services.UpdateMainAbility(id, ability)
 
 	if err != nil {
-		c.JSON(500, gin.H{"error": "update failed"})
+		fmt.Println("Error updating main ability:", err)
+		c.JSON(500, gin.H{"message": "update failed", "error": true})
 		return
 	}
 
-	c.JSON(200, gin.H{"message": "updated"})
+	fmt.Println("Main ability updated successfully")
+	c.JSON(200, gin.H{"message": "updated", "error": false})
 }
 
 func DeleteMainAbility(c *gin.Context) {
@@ -79,9 +87,11 @@ func DeleteMainAbility(c *gin.Context) {
 	err := services.DeleteMainAbility(id)
 
 	if err != nil {
-		c.JSON(500, gin.H{"error": "delete failed"})
+		fmt.Println("Error deleting main ability:", err)
+		c.JSON(500, gin.H{"error": true, "message": "deletion failed"})
 		return
 	}
 
-	c.JSON(200, gin.H{"message": "deleted"})
+	fmt.Println("Main ability deleted successfully")
+	c.JSON(200, gin.H{"message": "deleted", "error": false})
 }

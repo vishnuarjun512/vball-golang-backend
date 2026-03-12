@@ -12,3 +12,8 @@ type PlayerLoadout struct {
 	SubAbilitySlot2 *int `json:"subAbilitySlot2"`
 	SubAbilitySlot3 *int `json:"subAbilitySlot3"`
 }
+
+type Region struct {
+	ID   string `db:"id" json:"id"`
+	Name string `db:"name" json:"name"`
+}

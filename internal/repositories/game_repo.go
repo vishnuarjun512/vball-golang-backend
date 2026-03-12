@@ -15,7 +15,7 @@ func GetAllAbilities(ctx context.Context) ([]models.MainAbility, []models.SubAbi
 	id,
 	name,
 	description,
-	ability_type,
+	type,
 	tier,
 	duration,
 	cooldown,
@@ -23,7 +23,7 @@ func GetAllAbilities(ctx context.Context) ([]models.MainAbility, []models.SubAbi
 	jump_modifier,
 	set_modifier,
 	receive_modifier,
-	ball_force_modifier
+	ball_force_multiplier
 	FROM main_abilities
 	`)
 

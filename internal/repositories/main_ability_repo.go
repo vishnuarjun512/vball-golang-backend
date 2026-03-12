@@ -9,17 +9,19 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func CreateMainAbility(ctx context.Context, ability models.MainAbility) error {
+func CreateMainAbility(ctx context.Context, ability models.CreateAbilityRequest) (*models.MainAbility, error) {
 
 	query := `
 	INSERT INTO main_abilities
-	(name, description, ability_type, tier, duration, cooldown,
-	spike_modifier, jump_modifier, set_modifier, receive_modifier, ball_force_modifier)
+	(name, description, type, tier, duration, cooldown,
+	spike_modifier, jump_modifier, set_modifier, receive_modifier, ball_force_multiplier)
 
 	VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+	RETURNING id
 	`
 
-	_, err := database.DB.Exec(ctx, query,
+	var id int
+	err := database.DB.QueryRow(ctx, query,
 		ability.Name,
 		ability.Description,
 		ability.Type,
@@ -30,10 +32,15 @@ func CreateMainAbility(ctx context.Context, ability models.MainAbility) error {
 		ability.JumpModifier,
 		ability.SetModifier,
 		ability.ReceiveModifier,
-		ability.BallForceModifier,
-	)
+		ability.BallForceMultiplier,
+	).Scan(&id)
 
-	return err
+	if err != nil {
+		return nil, err
+	}
+
+	// Fetch the created ability to return it
+	return GetMainAbility(ctx, id)
 }
 
 func GetMainAbilities(ctx context.Context) ([]models.MainAbility, error) {
@@ -43,7 +50,7 @@ func GetMainAbilities(ctx context.Context) ([]models.MainAbility, error) {
 	id,
 	name,
 	description,
-	ability_type,
+	type,
 	tier,
 	duration,
 	cooldown,
@@ -51,7 +58,7 @@ func GetMainAbilities(ctx context.Context) ([]models.MainAbility, error) {
 	jump_modifier,
 	set_modifier,
 	receive_modifier,
-	ball_force_modifier
+	ball_force_multiplier
 	FROM main_abilities
 	`
 
@@ -77,7 +84,7 @@ func GetMainAbility(ctx context.Context, id int) (*models.MainAbility, error) {
 	id,
 	name,
 	description,
-	ability_type,
+	type,
 	tier,
 	duration,
 	cooldown,
@@ -85,7 +92,7 @@ func GetMainAbility(ctx context.Context, id int) (*models.MainAbility, error) {
 	jump_modifier,
 	set_modifier,
 	receive_modifier,
-	ball_force_modifier
+	ball_force_multiplier
 	FROM main_abilities
 	WHERE id=$1
 	`
@@ -113,20 +120,32 @@ func UpdateMainAbility(ctx context.Context, id int, ability models.MainAbility) 
 
 	query := `
 	UPDATE main_abilities
-	SET spike_modifier=$1,
-	    jump_modifier=$2,
-	    set_modifier=$3,
-	    receive_modifier=$4,
-	    ball_force_modifier=$5
-	WHERE id=$6
+	SET	name=$1,
+	description=$2,
+	type=$3,
+	tier=$4,
+	duration=$5,
+	cooldown=$6,
+	spike_modifier=$7,
+	jump_modifier=$8,
+	set_modifier=$9,
+	receive_modifier=$10,
+	ball_force_multiplier=$11
+	WHERE id=$12
 	`
 
 	_, err := database.DB.Exec(ctx, query,
+		ability.Name,
+		ability.Description,
+		ability.Type,
+		ability.Tier,
+		ability.Duration,
+		ability.Cooldown,
 		ability.SpikeModifier,
 		ability.JumpModifier,
 		ability.SetModifier,
 		ability.ReceiveModifier,
-		ability.BallForceModifier,
+		ability.BallForceMultiplier,
 		id,
 	)
 

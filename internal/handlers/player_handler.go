@@ -1,18 +1,21 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
 	"vball/internal/services"
+	vps "vball/internal/services/vps"
 )
 
-func GetAllPlayersLoadOut_Handler(c *gin.Context) {
+func GetAdminLoadOut_Handler(c *gin.Context) {
 
-	players, err := services.GetAllPlayersLoadOut_Service()
+	players, err := services.GetAdminLoadOut_Service()
 
 	if err != nil {
+		fmt.Println("Error fetching players:", err)
 		c.JSON(500, gin.H{
 			"error": "failed to load players",
 		})
@@ -22,8 +25,18 @@ func GetAllPlayersLoadOut_Handler(c *gin.Context) {
 	mainAbilities, subAbilities, err := services.GetAllAbilities()
 
 	if err != nil {
+		fmt.Println("Error fetching abilities:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "failed to load abilities",
+		})
+		return
+	}
+
+	regions, err := vps.GetRegions_Service()
+	if err != nil {
+		fmt.Println("Error fetching regions:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to load regions",
 		})
 		return
 	}
@@ -32,6 +45,7 @@ func GetAllPlayersLoadOut_Handler(c *gin.Context) {
 		"players":       players,
 		"mainAbilities": mainAbilities,
 		"subAbilities":  subAbilities,
+		"regions":       regions,
 	})
 
 }
