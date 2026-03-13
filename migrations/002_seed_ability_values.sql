@@ -156,40 +156,29 @@ UNION ALL
 SELECT player_id, 3, 1, 5, NULL::INTEGER
 FROM players WHERE steam_id = '789';
 
+
 -- Regions
+
 INSERT INTO regions (name)
 VALUES ('eu'), ('asia'), ('us')
-ON CONFLICT (name) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
--- Machines
-INSERT INTO machines (region_id, ip_address, cpu_cores, ram_gb)
-SELECT id, '144.76.55.21', 8, 16
-FROM regions WHERE name='eu'
-ON CONFLICT (ip_address) DO NOTHING;
+-- Machines:
 
 INSERT INTO machines (region_id, ip_address, cpu_cores, ram_gb)
-SELECT id, '103.21.44.12', 8, 16
-FROM regions WHERE name='asia'
-ON CONFLICT (ip_address) DO NOTHING;
+VALUES
+(1,'144.76.55.21',8,16),
+(2,'103.21.44.12',8,16),
+(3,'52.91.210.10',8,16)
+ON CONFLICT DO NOTHING;
 
--- Game servers EU
-INSERT INTO game_servers (machine_id, port, max_players)
-SELECT id, 7777, 20 FROM machines WHERE ip_address='144.76.55.21'
-ON CONFLICT (machine_id, port) DO NOTHING;
-
-INSERT INTO game_servers (machine_id, port, max_players)
-SELECT id, 7778, 20 FROM machines WHERE ip_address='144.76.55.21'
-ON CONFLICT (machine_id, port) DO NOTHING;
+-- Game servers
 
 INSERT INTO game_servers (machine_id, port, max_players)
-SELECT id, 7779, 20 FROM machines WHERE ip_address='144.76.55.21'
-ON CONFLICT (machine_id, port) DO NOTHING;
-
--- Game servers ASIA
-INSERT INTO game_servers (machine_id, port, max_players)
-SELECT id, 7777, 20 FROM machines WHERE ip_address='103.21.44.12'
-ON CONFLICT (machine_id, port) DO NOTHING;
-
-INSERT INTO game_servers (machine_id, port, max_players)
-SELECT id, 7778, 20 FROM machines WHERE ip_address='103.21.44.12'
-ON CONFLICT (machine_id, port) DO NOTHING;
+VALUES
+(1,7777,20),
+(1,7778,20),
+(2,7777,20),
+(2,7778,20),
+(3,7777,20)
+ON CONFLICT DO NOTHING;

@@ -1,5 +1,9 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+-- Create tables for the volleyball game backend
+-- This includes tables for players, abilities, servers, bans, activity logs, regions, machines, game servers, and server players.
+
+-- Players table to store player information and stats
 CREATE TABLE players (
     player_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     steam_id TEXT UNIQUE NOT NULL,
@@ -17,6 +21,7 @@ CREATE TABLE players (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Main abilities table to store different main abilities that players can equip
 CREATE TABLE main_abilities (
     id SERIAL PRIMARY KEY,
 
@@ -38,6 +43,7 @@ CREATE TABLE main_abilities (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Sub abilities table to store different sub abilities that players can equip
 CREATE TABLE sub_abilities (
     id SERIAL PRIMARY KEY,
 
@@ -52,6 +58,7 @@ CREATE TABLE sub_abilities (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Player abilities table to link players with their equipped main and sub abilities
 CREATE TABLE player_abilities (
 
     player_id UUID PRIMARY KEY
@@ -71,6 +78,7 @@ CREATE TABLE player_abilities (
         REFERENCES sub_abilities(id)
 );
 
+-- Servers table to track game servers and their status
 CREATE TABLE servers (
     id TEXT PRIMARY KEY,
     region TEXT,
@@ -81,6 +89,7 @@ CREATE TABLE servers (
     uptime TIMESTAMP
 );
 
+-- Bans table to track player bans and their details
 CREATE TABLE bans (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     player_id UUID REFERENCES players(player_id),
@@ -91,6 +100,7 @@ CREATE TABLE bans (
     type TEXT
 );
 
+-- Activity logs for tracking important events
 CREATE TABLE activity_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     type TEXT,
@@ -100,14 +110,14 @@ CREATE TABLE activity_logs (
 
 -- Regions
 CREATE TABLE regions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id SERIAL PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
--- Machines (VPS / physical servers)
+-- Machines
 CREATE TABLE machines (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    region_id UUID REFERENCES regions(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    region_id INT REFERENCES regions(id) ON DELETE CASCADE,
     ip_address VARCHAR(100) UNIQUE NOT NULL,
     cpu_cores INT NOT NULL,
     ram_gb INT NOT NULL,
@@ -115,32 +125,32 @@ CREATE TABLE machines (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Game server instances
+CREATE INDEX IF NOT EXISTS idx_machines_region
+ON machines(region_id);
+
+-- Game servers
 CREATE TABLE game_servers (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    machine_id UUID REFERENCES machines(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    machine_id INT REFERENCES machines(id) ON DELETE CASCADE,
     port INT NOT NULL,
     max_players INT DEFAULT 20,
     current_players INT DEFAULT 0,
-    status VARCHAR(20) DEFAULT 'waiting',
-    match_id UUID REFERENCES matches(id),
+    status VARCHAR(20) DEFAULT 'running',
     created_at TIMESTAMP DEFAULT NOW(),
     UNIQUE(machine_id, port)
 );
 
--- Matches
-CREATE TABLE matches (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    server_id UUID REFERENCES game_servers(id),
-    status VARCHAR(20) DEFAULT 'waiting',
-    created_at TIMESTAMP DEFAULT NOW()
+CREATE INDEX IF NOT EXISTS idx_servers_status_players
+ON game_servers(status, current_players);
+
+-- Server players (NEW)
+CREATE TABLE server_players (
+    id SERIAL PRIMARY KEY,
+    server_id INT REFERENCES game_servers(id) ON DELETE CASCADE,
+    player_id VARCHAR(100) NOT NULL,
+    joined_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(server_id, player_id)
 );
 
--- Match players
-CREATE TABLE match_players (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    match_id UUID REFERENCES matches(id) ON DELETE CASCADE,
-    player_id VARCHAR(100) NOT NULL,
-    team INT,
-    joined_at TIMESTAMP DEFAULT NOW()
-);
+CREATE INDEX IF NOT EXISTS idx_server_players_player
+ON server_players(player_id);
