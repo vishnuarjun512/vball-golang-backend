@@ -1,190 +1,157 @@
-# PostgreSQL Commands
+# Database Schema
+
+This document describes the PostgreSQL database structure used by the Volleyball Game Backend.
+
+The database stores:
+
+- Infrastructure information
+- Player assignments
+- Abilities
+- Player loadouts
+
+---
+
+## PostgreSQL Commands
 
 Connect to your container:
 
-```
+```bash
 docker exec -it vball-postgres psql -U postgres -d volleyball
 ```
 
 Then inside:
 
-```
+```sql
 \dt
 \d players
 SELECT * FROM players;
 ```
 
-### Navigation Commands
+### Navigation
 
-- List all databases
+List all databases:
 
 ```
 \l
 ```
 
-or
-
-```
-\list
-```
-
-### Connect to another database
+Connect to another database:
 
 ```
 \c database_name
 ```
 
-Example:
+Show current database:
 
-```
-\c volleyball
-```
-
-### Show current database
-
-```
+```sql
 SELECT current_database();
 ```
 
-## Table Inspection
+### Table Inspection
 
-### Show tables
+Show all tables:
 
 ```
 \dt
 ```
 
-### Show table structure
+Show table structure:
 
 ```
 \d table_name
 ```
 
-Example:
+Shows columns, types, indexes, and constraints.
 
-```
-\d players
-```
+Other useful inspection commands:
 
-Shows:
+- `\di` — show indexes
+- `\ds` — show sequences
+- `\dv` — show views
+- `\dn` — show schemas
+- `\du` — show roles (users)
+- `\d` — show all relations
 
-- columns
-- types
-- indexes
-- constraints
+### Querying Data
 
-Show indexes:
+Show all rows:
 
-- \di
-
-Show sequences:
-
-- \ds
-
-Show views:
-
-- \dv
-
-3. Query Data
-   Show all rows
-
-```
+```sql
 SELECT * FROM players;
 ```
 
-Limit results
+Limit results:
 
-```
-SELECT * FROM players LIMIT 10
+```sql
+SELECT * FROM players LIMIT 10;
 ```
 
-Filter rows
+Filter rows:
 
-```
+```sql
 SELECT * FROM players WHERE steam_id = 123;
 ```
 
-Count rows
+Count rows:
 
-```
+```sql
 SELECT COUNT(*) FROM players;
 ```
 
 ### Insert / Update / Delete
 
-##### Insert player
+Insert a player:
 
-```
+```sql
 INSERT INTO players (steam_id, username)
 VALUES (123456, 'Vishnu');
 ```
 
-##### Update player
+Update a player:
 
-```
+```sql
 UPDATE players
 SET username = 'NewName'
 WHERE steam_id = 123456;
 ```
 
-##### Delete player
+Delete a player:
 
-```
+```sql
 DELETE FROM players
 WHERE steam_id = 123456;
 ```
 
 ### Table Management
 
-##### Create table
+Create a table:
 
-```
+```sql
 CREATE TABLE players (
     steam_id BIGINT PRIMARY KEY,
     username TEXT
 );
 ```
 
-##### Delete table
+Delete a table:
 
-```
+```sql
 DROP TABLE players;
-Empty table (keep structure)
+```
+
+Empty a table (keep structure):
+
+```sql
 TRUNCATE TABLE players;
 ```
 
-### Search in tables
+### Formatting & Help
 
-Very useful command:
-
-```
-\d
-```
-
-Shows all relations.
-
-#### Show schemas
+Turn on expanded output (useful for wide rows):
 
 ```
-\dn
+\x
 ```
-
-#### Show roles (users)
-
-```
-\du
-```
-
-#### Command history
-
-```
-Press:
-↑ arrow key
-```
-
-to see previous commands.
-
-#### Help commands
 
 Show psql help:
 
@@ -195,34 +162,88 @@ Show psql help:
 Show SQL help:
 
 ```
-\h
-```
-
-Example:
-
-```
 \h SELECT
 ```
 
-### Formatting output
+View command history — press the `↑` arrow key.
 
-Turn expanded output on (very useful):
-
-```
-\x
-```
-
-Now large rows display vertically.
-
-### Exit psql
+Exit psql:
 
 ```
 \q
 ```
 
-# Database Schema
+---
 
-## players
+## Infrastructure Tables
+
+### Regions
+
+Stores available server regions.
+
+| Column | Type               |
+| ------ | ------------------ |
+| id     | SERIAL PRIMARY KEY |
+| name   | VARCHAR(50) UNIQUE |
+
+Example rows: `1 eu`, `2 asia`, `3 us`
+
+---
+
+### Machines
+
+Represents VPS or physical servers.
+
+| Column     | Type                       |
+| ---------- | -------------------------- |
+| id         | SERIAL PRIMARY KEY         |
+| region_id  | INT REFERENCES regions(id) |
+| ip_address | VARCHAR(100)               |
+| cpu_cores  | INT                        |
+| ram_gb     | INT                        |
+| status     | VARCHAR(20)                |
+| created_at | TIMESTAMP                  |
+
+Example rows: `1 | region 1 | 144.76.55.21`, `2 | region 2 | 103.21.44.12`
+
+---
+
+### Game Servers
+
+Represents Unreal Engine server instances running on machines.
+
+| Column          | Type                        |
+| --------------- | --------------------------- |
+| id              | SERIAL PRIMARY KEY          |
+| machine_id      | INT REFERENCES machines(id) |
+| port            | INT                         |
+| max_players     | INT                         |
+| current_players | INT                         |
+| status          | VARCHAR(20)                 |
+| created_at      | TIMESTAMP                   |
+
+Unique constraint: `UNIQUE(machine_id, port)`
+
+Each server is identified by `machine_ip + port`, for example: `103.21.44.12:7777`
+
+---
+
+### Server Players
+
+Tracks players connected to game servers.
+
+| Column    | Type                            |
+| --------- | ------------------------------- |
+| id        | SERIAL PRIMARY KEY              |
+| server_id | INT REFERENCES game_servers(id) |
+| player_id | VARCHAR(100)                    |
+| joined_at | TIMESTAMP                       |
+
+---
+
+## Player Tables
+
+### players
 
 Stores player account data.
 
@@ -241,9 +262,9 @@ Stores player account data.
 
 ---
 
-## player_abilities
+### player_abilities
 
-Links players to abilities.
+Links players to their ability loadout.
 
 | Column            | Type    |
 | ----------------- | ------- |
@@ -255,7 +276,9 @@ Links players to abilities.
 
 ---
 
-## main_abilities
+## Ability Tables
+
+### main_abilities
 
 Defines primary abilities.
 
@@ -276,7 +299,7 @@ Defines primary abilities.
 
 ---
 
-## sub_abilities
+### sub_abilities
 
 Defines modifier abilities.
 
@@ -291,22 +314,9 @@ Defines modifier abilities.
 
 ---
 
-## servers
+## Moderation Tables
 
-Tracks active game servers.
-
-| Column          | Type    |
-| --------------- | ------- |
-| id              | TEXT    |
-| region          | TEXT    |
-| max_players     | INTEGER |
-| current_players | INTEGER |
-| game_mode       | TEXT    |
-| status          | TEXT    |
-
----
-
-## bans
+### bans
 
 Stores moderation actions.
 
@@ -322,7 +332,7 @@ Stores moderation actions.
 
 ---
 
-## activity_logs
+### activity_logs
 
 Tracks system events.
 
@@ -332,3 +342,21 @@ Tracks system events.
 | type       | TEXT      |
 | message    | TEXT      |
 | created_at | TIMESTAMP |
+
+---
+
+## Database Indexes
+
+Indexes are added to optimize matchmaking and lookup queries.
+
+| Index Name                   | Table          | Columns                   |
+| ---------------------------- | -------------- | ------------------------- |
+| `idx_servers_status_players` | game_servers   | (status, current_players) |
+| `idx_machines_region`        | machines       | (region_id)               |
+| `idx_server_players_player`  | server_players | (player_id)               |
+
+These indexes allow fast lookups when:
+
+- Finding available servers
+- Locating players across servers
+- Filtering servers by region

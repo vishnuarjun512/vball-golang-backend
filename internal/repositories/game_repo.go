@@ -11,20 +11,20 @@ import (
 func GetAllAbilities(ctx context.Context) ([]models.MainAbility, []models.SubAbility, error) {
 
 	mainRows, err := database.DB.Query(ctx, `
-	SELECT
-	id,
-	name,
-	description,
-	type,
-	tier,
-	duration,
-	cooldown,
-	spike_modifier,
-	jump_modifier,
-	set_modifier,
-	receive_modifier,
-	ball_force_multiplier
-	FROM main_abilities
+		SELECT
+			id,
+			name,
+			description,
+			type,
+			tier,
+			duration,
+			cooldown,
+			spike_modifier,
+			jump_modifier,
+			set_modifier,
+			receive_modifier,
+			ball_force_multiplier
+		FROM main_abilities
 	`)
 
 	if err != nil {
@@ -40,14 +40,14 @@ func GetAllAbilities(ctx context.Context) ([]models.MainAbility, []models.SubAbi
 	}
 
 	subRows, err := database.DB.Query(ctx, `
-	SELECT
-	id,
-	name,
-	description,
-	tier,
-	modifier_type,
-	modifier_value
-	FROM sub_abilities
+		SELECT
+			id,
+			name,
+			description,
+			tier,
+			modifier_type,
+			modifier_value
+		FROM sub_abilities
 	`)
 
 	if err != nil {

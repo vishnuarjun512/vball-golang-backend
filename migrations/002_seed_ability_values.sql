@@ -158,13 +158,11 @@ FROM players WHERE steam_id = '789';
 
 
 -- Regions
-
 INSERT INTO regions (name)
 VALUES ('eu'), ('asia'), ('us')
 ON CONFLICT DO NOTHING;
 
--- Machines:
-
+-- VPS Machines:
 INSERT INTO machines (region_id, ip_address, cpu_cores, ram_gb)
 VALUES
 (1,'144.76.55.21',8,16),
@@ -173,7 +171,6 @@ VALUES
 ON CONFLICT DO NOTHING;
 
 -- Game servers
-
 INSERT INTO game_servers (machine_id, port, max_players)
 VALUES
 (1,7777,20),
