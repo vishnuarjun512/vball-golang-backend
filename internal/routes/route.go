@@ -52,6 +52,7 @@ func SetupRoutes(router *gin.Engine) {
 		   Endpoint Test
 		   curl http://localhost:8080/game/abilities
 		*/
+
 		game.GET("/abilities", handlers.GetGameAbilities)
 		/*
 		   Endpoint Test

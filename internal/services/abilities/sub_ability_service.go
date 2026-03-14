@@ -1,4 +1,4 @@
-package services
+package ability_service
 
 import (
 	"context"

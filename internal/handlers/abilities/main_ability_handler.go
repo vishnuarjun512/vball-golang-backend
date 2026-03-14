@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"vball/internal/models"
-	"vball/internal/services"
+	ability_service "vball/internal/services/abilities"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +20,7 @@ func CreateMainAbility(c *gin.Context) {
 		return
 	}
 
-	createdAbility, err := services.CreateMainAbility(newAbility)
+	createdAbility, err := ability_service.CreateMainAbility(newAbility)
 
 	if err != nil {
 		fmt.Println("Error creating main ability:", err)
@@ -34,7 +34,7 @@ func CreateMainAbility(c *gin.Context) {
 
 func GetMainAbilities(c *gin.Context) {
 
-	abilities, err := services.GetMainAbilities()
+	abilities, err := ability_service.GetMainAbilities()
 
 	if err != nil {
 		fmt.Println("Error fetching main abilities:", err)
@@ -50,7 +50,7 @@ func GetMainAbility(c *gin.Context) {
 
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	ability, err := services.GetMainAbility(id)
+	ability, err := ability_service.GetMainAbility(id)
 
 	if err != nil {
 		c.JSON(404, gin.H{"error": "not found"})
@@ -68,7 +68,7 @@ func UpdateMainAbility(c *gin.Context) {
 
 	c.BindJSON(&ability)
 
-	err := services.UpdateMainAbility(id, ability)
+	err := ability_service.UpdateMainAbility(id, ability)
 
 	if err != nil {
 		fmt.Println("Error updating main ability:", err)
@@ -84,7 +84,7 @@ func DeleteMainAbility(c *gin.Context) {
 
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	err := services.DeleteMainAbility(id)
+	err := ability_service.DeleteMainAbility(id)
 
 	if err != nil {
 		fmt.Println("Error deleting main ability:", err)

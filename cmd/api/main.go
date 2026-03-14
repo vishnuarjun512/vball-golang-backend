@@ -33,7 +33,6 @@ func main() {
 
 	// Get port (default 8080)
 	port := os.Getenv("PORT")
-	fmt.Println("Port from env:", port)
 	if port == "" {
 		port = "8080"
 	}
