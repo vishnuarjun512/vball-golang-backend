@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type PlayerLoadout struct {
 	PlayerID string `json:"playerId"`
 	SteamID  string `json:"steamId"`
@@ -14,27 +16,32 @@ type PlayerLoadout struct {
 }
 
 type Region struct {
-	ID   string `db:"id" json:"id"`
-	Name string `db:"name" json:"name"`
+	ID         string `db:"id" json:"id"`
+	RegionName string `db:"region_name" json:"region_name"`
+	RegionCode string `db:"region_code" json:"region_code"`
 }
 
 type Machine struct {
-	ID        string `db:"id"`
-	RegionID  string `db:"region_id"`
-	Name      string `db:"name"`
-	IPAddress string `db:"ip_address"`
-	SSHPort   int    `db:"ssh_port"`
-	Status    string `db:"status"`
+	ID             int    `db:"id" json:"id"`
+	RegionID       string `db:"region_id" json:"region_id"`
+	IPAddress      string `db:"ip_address" json:"ip_address"`
+	CPUCores       int    `db:"cpu_cores" json:"cpu_cores"`
+	RamGB          int    `db:"ram_gb" json:"ram_gb"`
+	Status         string `db:"status" json:"status"`
+	PortStart      int    `db:"port_start" json:"port_start"`
+	PortEnd        int    `db:"port_end" json:"port_end"`
+	AvailablePorts []int  `db:"-" json:"available_ports"`
 }
 
 type GameServer struct {
-	ID             int    `db:"id"`
-	MachineID      string `db:"machine_id"`
-	Port           int    `db:"port"`
-	MaxPlayers     int    `db:"max_players"`
-	CurrentPlayers int    `db:"current_players"`
-	Status         string `db:"status"`
-	ProcessID      int    `db:"process_id"`
+	ID             int       `db:"id" json:"id"`
+	MachineID      int       `db:"machine_id" json:"machine_id"`
+	Port           int       `db:"port" json:"port"`
+	MaxPlayers     int       `db:"max_players" json:"max_players"`
+	CurrentPlayers int       `db:"current_players" json:"current_players"`
+	Status         string    `db:"status" json:"status"`
+	Uptime         time.Time `db:"uptime" json:"uptime"`
+	CreatedAt      time.Time `db:"createdAt" json:"createdAt"`
 }
 
 type Match struct {

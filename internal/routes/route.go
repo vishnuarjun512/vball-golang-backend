@@ -3,6 +3,7 @@ package routes
 import (
 	"vball/internal/handlers"
 	ability "vball/internal/handlers/abilities"
+	region_handler "vball/internal/handlers/region"
 	vps "vball/internal/handlers/vps"
 
 	"github.com/gin-gonic/gin"
@@ -31,6 +32,25 @@ func SetupRoutes(router *gin.Engine) {
 	{
 		player.GET("", handlers.GetAdminLoadOut_Handler)
 		player.GET("/players/:steamid", handlers.GetPlayerBySteamID_Handler)
+
+	}
+
+	region := router.Group("/region")
+	{
+		region.GET("", region_handler.GetAllRegions_Hanlder)
+		region.POST("", region_handler.CreateRegion_Handler)
+		region.PATCH("/:id", region_handler.UpdateRegion_Handler)
+		region.DELETE("/:id", region_handler.DeleteRegion_Handler)
+	}
+
+	machines := router.Group("/machine")
+	{
+		machines.GET("", region_handler.GetAllMachines_Handler)
+	}
+
+	game_server := router.Group(("/gameserver"))
+	{
+		game_server.POST("", vps.CreateGameServer_Handler)
 	}
 
 	// GAME RUNTIME ROUTES

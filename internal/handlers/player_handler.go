@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"vball/internal/services"
-	vps "vball/internal/services/vps"
+	region "vball/internal/services/regions"
 )
 
 func GetAdminLoadOut_Handler(c *gin.Context) {
@@ -32,11 +32,29 @@ func GetAdminLoadOut_Handler(c *gin.Context) {
 		return
 	}
 
-	regions, err := vps.GetRegions_Service()
+	regions, err := region.GetRegions_Service()
 	if err != nil {
 		fmt.Println("Error fetching regions:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "failed to load regions",
+		})
+		return
+	}
+
+	machines, err := region.GetAllMachines_Service()
+	if err != nil {
+		fmt.Println("Error fetching Machines:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to load Machines",
+		})
+		return
+	}
+
+	gameServers, err := region.GetAllGameServers_Service()
+	if err != nil {
+		fmt.Println("Error fetching Game Servers:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to load Game Servers",
 		})
 		return
 	}
@@ -46,6 +64,8 @@ func GetAdminLoadOut_Handler(c *gin.Context) {
 		"mainAbilities": mainAbilities,
 		"subAbilities":  subAbilities,
 		"regions":       regions,
+		"machines":      machines,
+		"gameServers":   gameServers,
 	})
 
 }

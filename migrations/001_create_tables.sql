@@ -111,7 +111,8 @@ CREATE TABLE activity_logs (
 -- Regions
 CREATE TABLE regions (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) UNIQUE NOT NULL
+    region_name VARCHAR(50) UNIQUE NOT NULL,
+    region_code VARCHAR(50) 
 );
 
 -- Machines
@@ -122,11 +123,24 @@ CREATE TABLE machines (
     cpu_cores INT NOT NULL,
     ram_gb INT NOT NULL,
     status VARCHAR(20) DEFAULT 'active',
+    port_start INT NOT NULL,
+    port_end INT NOT NULL,
+    available_ports INT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
 
 CREATE INDEX IF NOT EXISTS idx_machines_region
 ON machines(region_id);
+
+-- PORTS
+CREATE TABLE ports (
+    id SERIAL PRIMARY KEY,
+    machine_id INT REFERENCES machines(id) ON DELETE CASCADE,
+    port_number INT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_ports_machine_id
+ON ports(machine_id);
 
 -- Game servers
 CREATE TABLE game_servers (
@@ -136,12 +150,10 @@ CREATE TABLE game_servers (
     max_players INT DEFAULT 20,
     current_players INT DEFAULT 0,
     status VARCHAR(20) DEFAULT 'running',
+    uptime TIMESTAMP DEFAULT NOW(),
     created_at TIMESTAMP DEFAULT NOW(),
     UNIQUE(machine_id, port)
 );
-
-CREATE INDEX IF NOT EXISTS idx_servers_status_players
-ON game_servers(status, current_players);
 
 -- Server players (NEW)
 CREATE TABLE server_players (
