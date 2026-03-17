@@ -2,9 +2,14 @@ package routes
 
 import (
 	"vball/internal/handlers"
-	ability "vball/internal/handlers/abilities"
-	region_handler "vball/internal/handlers/region"
-	vps "vball/internal/handlers/vps"
+
+	"vball/internal/handlers/vps"
+
+	mainAbility "vball/internal/tables/abilities/main"
+	subAbility "vball/internal/tables/abilities/sub"
+	"vball/internal/tables/gameserver"
+	"vball/internal/tables/machine"
+	"vball/internal/tables/region"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,17 +19,17 @@ func SetupRoutes(router *gin.Engine) {
 	// ADMIN ROUTES (dashboard)
 	admin := router.Group("/abilities")
 	{
-		admin.POST("/main", ability.CreateMainAbility)
-		admin.GET("/main", ability.GetMainAbilities)
-		admin.GET("/main/:id", ability.GetMainAbility)
-		admin.PATCH("/main/:id", ability.UpdateMainAbility)
-		admin.DELETE("/main/:id", ability.DeleteMainAbility)
+		admin.POST("/main", mainAbility.CreateMainAbility)
+		admin.GET("/main", mainAbility.GetMainAbilities)
+		admin.GET("/main/:id", mainAbility.GetMainAbility)
+		admin.PATCH("/main/:id", mainAbility.UpdateMainAbility)
+		admin.DELETE("/main/:id", mainAbility.DeleteMainAbility)
 
-		admin.POST("/sub", ability.CreateSubAbility)
-		admin.GET("/sub", ability.GetSubAbilities)
-		admin.GET("/sub/:id", ability.GetSubAbility)
-		admin.PATCH("/sub/:id", ability.UpdateSubAbility)
-		admin.DELETE("/sub/:id", ability.DeleteSubAbility)
+		admin.POST("/sub", subAbility.UpdateSubAbility)
+		admin.GET("/sub", subAbility.GetSubAbilities)
+		admin.GET("/sub/:id", subAbility.GetSubAbility)
+		admin.PATCH("/sub/:id", subAbility.UpdateSubAbility)
+		admin.DELETE("/sub/:id", subAbility.DeleteSubAbility)
 	}
 
 	// PLAYER ROUTES
@@ -35,22 +40,23 @@ func SetupRoutes(router *gin.Engine) {
 
 	}
 
-	region := router.Group("/region")
+	regions := router.Group("/region")
 	{
-		region.GET("", region_handler.GetAllRegions_Hanlder)
-		region.POST("", region_handler.CreateRegion_Handler)
-		region.PATCH("/:id", region_handler.UpdateRegion_Handler)
-		region.DELETE("/:id", region_handler.DeleteRegion_Handler)
+		regions.GET("", region.GetAllRegions_Hanlder)
+		regions.POST("", region.CreateRegion_Handler)
+		regions.PATCH("/:id", region.UpdateRegion_Handler)
+		regions.DELETE("/:id", region.DeleteRegion_Handler)
 	}
 
 	machines := router.Group("/machine")
 	{
-		machines.GET("", region_handler.GetAllMachines_Handler)
+		machines.GET("", machine.GetAllMachines_Handler)
 	}
 
 	game_server := router.Group(("/gameserver"))
 	{
-		game_server.POST("", vps.CreateGameServer_Handler)
+		game_server.POST("", gameserver.CreateGameServer_Handler)
+		game_server.GET("/:id", gameserver.GetGameServer_Handler)
 	}
 
 	// GAME RUNTIME ROUTES

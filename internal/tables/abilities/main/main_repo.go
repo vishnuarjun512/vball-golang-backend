@@ -1,4 +1,4 @@
-package repositories
+package mainAbility
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func CreateMainAbility(ctx context.Context, ability models.CreateAbilityRequest) (*models.MainAbility, error) {
+func CreateMainAbility_Repo(ctx context.Context, ability models.CreateAbilityRequest) (*models.MainAbility, error) {
 
 	query := `
 	INSERT INTO main_abilities
@@ -40,10 +40,10 @@ func CreateMainAbility(ctx context.Context, ability models.CreateAbilityRequest)
 	}
 
 	// Fetch the created ability to return it
-	return GetMainAbility(ctx, id)
+	return GetMainAbility_Repo(ctx, id)
 }
 
-func GetMainAbilities(ctx context.Context) ([]models.MainAbility, error) {
+func GetMainAbilities_Repo(ctx context.Context) ([]models.MainAbility, error) {
 
 	query := `
 	SELECT
@@ -77,7 +77,7 @@ func GetMainAbilities(ctx context.Context) ([]models.MainAbility, error) {
 	return abilities, nil
 }
 
-func GetMainAbility(ctx context.Context, id int) (*models.MainAbility, error) {
+func GetMainAbility_Repo(ctx context.Context, id int) (*models.MainAbility, error) {
 
 	query := `
 	SELECT
@@ -116,7 +116,7 @@ func GetMainAbility(ctx context.Context, id int) (*models.MainAbility, error) {
 	return &abilities[0], nil
 }
 
-func UpdateMainAbility(ctx context.Context, id int, ability models.MainAbility) error {
+func UpdateMainAbility_Repo(ctx context.Context, id int, ability models.MainAbility) error {
 
 	query := `
 	UPDATE main_abilities
@@ -152,7 +152,7 @@ func UpdateMainAbility(ctx context.Context, id int, ability models.MainAbility) 
 	return err
 }
 
-func DeleteMainAbility(ctx context.Context, id int) error {
+func DeleteMainAbility_Repo(ctx context.Context, id int) error {
 
 	query := `DELETE FROM main_abilities WHERE id=$1`
 

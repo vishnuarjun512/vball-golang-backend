@@ -1,9 +1,8 @@
-package region
+package machine
 
 import (
 	"fmt"
 	"net/http"
-	region "vball/internal/services/regions"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +12,7 @@ type MachineReq struct {
 }
 
 func GetAllMachines_Handler(c *gin.Context) {
-	machines, err := region.GetAllMachines_Service()
+	machines, err := GetAllMachines_Service()
 	if err != nil {
 		fmt.Println("Error getting all machines:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{

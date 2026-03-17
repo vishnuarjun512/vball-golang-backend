@@ -1,9 +1,8 @@
-package handlers
+package subAbility
 
 import (
 	"strconv"
 	"vball/internal/models"
-	ability_service "vball/internal/services/abilities"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +16,7 @@ func CreateSubAbility(c *gin.Context) {
 		return
 	}
 
-	err := ability_service.CreateSubAbility(ability)
+	err := CreateSubAbility_Service(ability)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "creation failed"})
@@ -29,7 +28,7 @@ func CreateSubAbility(c *gin.Context) {
 
 func GetSubAbilities(c *gin.Context) {
 
-	abilities, err := ability_service.GetSubAbilities()
+	abilities, err := GetSubAbilities_Service()
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "failed"})
@@ -43,7 +42,7 @@ func GetSubAbility(c *gin.Context) {
 
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	ability, err := ability_service.GetSubAbility(id)
+	ability, err := GetSubAbility_Service(id)
 
 	if err != nil {
 		c.JSON(404, gin.H{"error": "not found"})
@@ -61,7 +60,7 @@ func UpdateSubAbility(c *gin.Context) {
 
 	c.BindJSON(&ability)
 
-	err := ability_service.UpdateSubAbility(id, ability)
+	err := UpdateSubAbility_Service(id, ability)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "update failed"})
@@ -75,7 +74,7 @@ func DeleteSubAbility(c *gin.Context) {
 
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	err := ability_service.DeleteSubAbility(id)
+	err := DeleteSubAbility_Service(id)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "delete failed"})

@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
-
 	"vball/internal/services"
-	region "vball/internal/services/regions"
+	"vball/internal/tables/gameserver"
+	"vball/internal/tables/machine"
+	"vball/internal/tables/region"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetAdminLoadOut_Handler(c *gin.Context) {
@@ -41,7 +43,7 @@ func GetAdminLoadOut_Handler(c *gin.Context) {
 		return
 	}
 
-	machines, err := region.GetAllMachines_Service()
+	machines, err := machine.GetAllMachines_Service()
 	if err != nil {
 		fmt.Println("Error fetching Machines:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -50,7 +52,7 @@ func GetAdminLoadOut_Handler(c *gin.Context) {
 		return
 	}
 
-	gameServers, err := region.GetAllGameServers_Service()
+	gameServers, err := gameserver.GetAllGameServers_Service()
 	if err != nil {
 		fmt.Println("Error fetching Game Servers:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{

@@ -3,7 +3,6 @@ package region
 import (
 	"fmt"
 	"net/http"
-	region "vball/internal/services/regions"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +12,7 @@ type RegionReq struct {
 }
 
 func GetAllRegions_Hanlder(c *gin.Context) {
-	regions, err := region.GetRegions_Service()
+	regions, err := GetRegions_Service()
 	if err != nil {
 		fmt.Println("Error getting all Regions:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -38,7 +37,7 @@ func CreateRegion_Handler(c *gin.Context) {
 		return
 	}
 
-	id, err := region.CreateRegion_Service(req.RegionName)
+	id, err := CreateRegion_Service(req.RegionName)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -66,7 +65,7 @@ func UpdateRegion_Handler(c *gin.Context) {
 		return
 	}
 
-	err := region.UpdateRegion_Service(req.RegionName, regionId)
+	err := UpdateRegion_Service(req.RegionName, regionId)
 
 	if err != nil {
 		fmt.Println("Error updating Region:", err)
@@ -80,7 +79,7 @@ func UpdateRegion_Handler(c *gin.Context) {
 func DeleteRegion_Handler(c *gin.Context) {
 	id := c.Param("id")
 
-	err := region.DeleteRegion_Service(id)
+	err := DeleteRegion_Service(id)
 
 	if err != nil {
 		fmt.Println("Error deleting Region:", err)

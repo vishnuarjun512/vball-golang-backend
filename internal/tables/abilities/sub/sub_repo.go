@@ -1,4 +1,4 @@
-package repositories
+package subAbility
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"vball/internal/models"
 )
 
-func CreateSubAbility(ctx context.Context, ability models.SubAbility) error {
+func CreateSubAbility_Repo(ctx context.Context, ability models.SubAbility) error {
 
 	query := `
 	INSERT INTO sub_abilities
@@ -25,7 +25,7 @@ func CreateSubAbility(ctx context.Context, ability models.SubAbility) error {
 	return err
 }
 
-func GetSubAbilities(ctx context.Context) ([]models.SubAbility, error) {
+func GetSubAbilities_Repo(ctx context.Context) ([]models.SubAbility, error) {
 
 	query := `SELECT id,name,description,tier,modifier_type,modifier_value FROM sub_abilities`
 
@@ -61,7 +61,7 @@ func GetSubAbilities(ctx context.Context) ([]models.SubAbility, error) {
 	return abilities, nil
 }
 
-func GetSubAbility(ctx context.Context, id int) (*models.SubAbility, error) {
+func GetSubAbility_Repo(ctx context.Context, id int) (*models.SubAbility, error) {
 
 	query := `
 	SELECT id,name,description,tier,modifier_type,modifier_value
@@ -89,7 +89,7 @@ func GetSubAbility(ctx context.Context, id int) (*models.SubAbility, error) {
 	return &ability, nil
 }
 
-func UpdateSubAbility(ctx context.Context, id int, ability models.SubAbility) error {
+func UpdateSubAbility_Repo(ctx context.Context, id int, ability models.SubAbility) error {
 
 	query := `
 	UPDATE sub_abilities
@@ -107,7 +107,7 @@ func UpdateSubAbility(ctx context.Context, id int, ability models.SubAbility) er
 	return err
 }
 
-func DeleteSubAbility(ctx context.Context, id int) error {
+func DeleteSubAbility_Repo(ctx context.Context, id int) error {
 
 	query := `DELETE FROM sub_abilities WHERE id=$1`
 

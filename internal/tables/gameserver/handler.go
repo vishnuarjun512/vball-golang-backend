@@ -1,9 +1,8 @@
-package vps
+package gameserver
 
 import (
 	"net/http"
 	"strconv"
-	"vball/internal/services/vps"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,7 +24,7 @@ func CreateGameServer_Handler(c *gin.Context) {
 		return
 	}
 
-	gameServer, err := vps.CreateGameServer_Service(req.MachineID, req.Port, req.MaxPlayers)
+	gameServer, err := CreateGameServer_Service(req.MachineID, req.Port, req.MaxPlayers)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":   true,
@@ -53,7 +52,7 @@ func GetGameServer_Handler(c *gin.Context) {
 	}
 
 	// 3. Call your service with the integer
-	gameServer, err := vps.GetGameServer_Service(id)
+	gameServer, err := GetGameServer_Service(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{ // Use 404 for "Not Found"
 			"error":   true,
