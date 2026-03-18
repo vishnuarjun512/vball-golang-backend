@@ -46,7 +46,7 @@ func GetGameServer_Handler(c *gin.Context) {
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "id must be an integer",
+			"error": "Id must be an integer",
 		})
 		return
 	}

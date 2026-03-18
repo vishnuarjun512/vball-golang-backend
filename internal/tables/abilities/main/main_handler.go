@@ -1,96 +1,109 @@
 package mainAbility
 
 import (
-	"fmt"
+	"net/http"
 	"strconv"
 
 	"vball/internal/models"
+	"vball/utils" // Import your new helper
 
 	"github.com/gin-gonic/gin"
 )
 
 func CreateMainAbility(c *gin.Context) {
-
 	var newAbility models.CreateAbilityRequest
 
 	if err := c.ShouldBindJSON(&newAbility); err != nil {
-		fmt.Println("Error binding JSON:", err)
-		c.JSON(400, gin.H{"error": "invalid request"})
+		utils.SendError(c, http.StatusBadRequest, "Invalid request body", err)
 		return
 	}
 
 	createdAbility, err := CreateMainAbility_Service(newAbility)
-
 	if err != nil {
-		fmt.Println("Error creating main ability:", err)
-		c.JSON(500, gin.H{"error": "creation failed"})
+		utils.SendError(c, http.StatusInternalServerError, "Error creating main ability", err)
 		return
 	}
 
-	fmt.Println("Main ability created successfully")
-	c.JSON(200, gin.H{"message": "ability created", "ability": createdAbility})
+	c.JSON(http.StatusCreated, gin.H{
+		"error":   false,
+		"message": "Main ability created successfully",
+		"ability": createdAbility,
+	})
 }
 
 func GetMainAbilities(c *gin.Context) {
-
 	abilities, err := GetMainAbilities_Service()
-
 	if err != nil {
-		fmt.Println("Error fetching main abilities:", err)
-		c.JSON(500, gin.H{"error": "failed"})
+		utils.SendError(c, http.StatusInternalServerError, "Error fetching main abilities", err)
 		return
 	}
 
-	fmt.Println("Main abilities fetched successfully")
-	c.JSON(200, abilities)
+	c.JSON(http.StatusOK, gin.H{
+		"error":     false,
+		"message":   "Main abilities fetched successfully",
+		"abilities": abilities,
+	})
 }
 
 func GetMainAbility(c *gin.Context) {
-
-	id, _ := strconv.Atoi(c.Param("id"))
-
-	ability, err := GetMainAbility_Service(id)
-
-	if err != nil {
-		c.JSON(404, gin.H{"error": "not found"})
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil || id == 0 {
+		utils.SendError(c, http.StatusBadRequest, "Invalid Ability ID", nil)
 		return
 	}
 
-	c.JSON(200, ability)
+	ability, err := GetMainAbility_Service(id)
+	if err != nil {
+		utils.SendError(c, http.StatusNotFound, "Main ability not found", err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"error":   false,
+		"ability": ability,
+	})
 }
 
 func UpdateMainAbility(c *gin.Context) {
-
-	id, _ := strconv.Atoi(c.Param("id"))
-
-	var ability models.MainAbility
-
-	c.BindJSON(&ability)
-
-	err := UpdateMainAbility_Service(id, ability)
-
-	if err != nil {
-		fmt.Println("Error updating main ability:", err)
-		c.JSON(500, gin.H{"message": "update failed", "error": true})
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil || id == 0 {
+		utils.SendError(c, http.StatusBadRequest, "Invalid Ability ID", nil)
 		return
 	}
 
-	fmt.Println("Main ability updated successfully")
-	c.JSON(200, gin.H{"message": "updated", "error": false})
+	var ability models.MainAbility
+	if err := c.ShouldBindJSON(&ability); err != nil {
+		utils.SendError(c, http.StatusBadRequest, "Invalid JSON input", err)
+		return
+	}
+
+	err = UpdateMainAbility_Service(id, ability)
+	if err != nil {
+		utils.SendError(c, http.StatusInternalServerError, "Error updating main ability", err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"error":   false,
+		"message": "Main ability updated successfully",
+	})
 }
 
 func DeleteMainAbility(c *gin.Context) {
-
-	id, _ := strconv.Atoi(c.Param("id"))
-
-	err := DeleteMainAbility_Service(id)
-
-	if err != nil {
-		fmt.Println("Error deleting main ability:", err)
-		c.JSON(500, gin.H{"error": true, "message": "deletion failed"})
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil || id == 0 {
+		utils.SendError(c, http.StatusBadRequest, "Invalid Ability ID", nil)
 		return
 	}
 
-	fmt.Println("Main ability deleted successfully")
-	c.JSON(200, gin.H{"message": "deleted", "error": false})
+	err = DeleteMainAbility_Service(id)
+	if err != nil {
+		utils.SendError(c, http.StatusInternalServerError, "Error deleting main ability", err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"error":   false,
+		"message": "Main ability deleted successfully",
+	})
 }

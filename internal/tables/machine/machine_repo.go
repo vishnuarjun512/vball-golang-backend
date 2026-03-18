@@ -2,7 +2,8 @@ package machine
 
 import (
 	"context"
-	"fmt"
+	"database/sql"
+	"time"
 	"vball/internal/database"
 	"vball/internal/models"
 
@@ -26,7 +27,6 @@ func GetAllMachines_Repo(ctx context.Context) ([]models.Machine, error) {
 
 	rows, err := database.DB.Query(ctx, query)
 	if err != nil {
-		fmt.Println("VPS_REPO_ERROR: Cannot find any Machines")
 		return nil, err
 	}
 	defer rows.Close()
@@ -62,7 +62,6 @@ func GetAvailablePorts_Repo(ctx context.Context, machineID int) ([]int, error) {
 	).Scan(&portStart, &portEnd)
 
 	if err != nil {
-		fmt.Println("PORT_REPO_ERROR: Cannot fetch machine port range")
 		return nil, err
 	}
 
@@ -72,7 +71,6 @@ func GetAvailablePorts_Repo(ctx context.Context, machineID int) ([]int, error) {
 		machineID,
 	)
 	if err != nil {
-		fmt.Println("PORT_REPO_ERROR: Cannot fetch used ports")
 		return nil, err
 	}
 	defer rows.Close()
@@ -97,4 +95,39 @@ func GetAvailablePorts_Repo(ctx context.Context, machineID int) ([]int, error) {
 	}
 
 	return availablePorts, nil
+}
+
+type Machine struct {
+	ID             int       `json:"id"`
+	RegionID       int       `json:"region_id"`
+	IPAddress      string    `json:"ip_address"`
+	CPUCores       int       `json:"cpu_cores"`
+	RAMGB          int       `json:"ram_gb"`
+	Status         string    `json:"status"`
+	PortStart      int       `json:"port_start"`
+	PortEnd        int       `json:"port_end"`
+	AvailablePorts int       `json:"available_ports"`
+	CreatedAt      time.Time `json:"created_at"`
+}
+
+// db is your global connection, adjust according to your project setup
+var db *sql.DB
+
+func DeleteMachine_Repo(id int) error {
+	_, err := db.Exec("DELETE FROM machines WHERE id=$1", id)
+	return err
+}
+
+func UpdateMachine_Repo(id int, m Machine) error {
+	query := `UPDATE machines SET region_id=$1, ip_address=$2, cpu_cores=$3, ram_gb=$4, status=$5, port_start=$6, port_end=$7, available_ports=$8 WHERE id=$9`
+	_, err := db.Exec(query, m.RegionID, m.IPAddress, m.CPUCores, m.RAMGB, m.Status, m.PortStart, m.PortEnd, m.AvailablePorts, id)
+	return err
+}
+
+func CreateMachine_Repo(m Machine) (int, error) {
+	var id int
+	query := `INSERT INTO machines (region_id, ip_address, cpu_cores, ram_gb, status, port_start, port_end, available_ports) 
+	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`
+	err := db.QueryRow(query, m.RegionID, m.IPAddress, m.CPUCores, m.RAMGB, m.Status, m.PortStart, m.PortEnd, m.AvailablePorts).Scan(&id)
+	return id, err
 }

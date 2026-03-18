@@ -1,13 +1,11 @@
 package models
 
 type CreateAbilityRequest struct {
-	Name string `json:"name"`
-	Type string `json:"type"`
-	Tier string `json:"tier"`
-
-	Duration int `json:"duration"`
-	Cooldown int `json:"cooldown"`
-
+	Name        string `json:"name"`
+	Type        string `json:"type"`
+	Tier        string `json:"tier"`
+	Duration    int    `json:"duration"`
+	Cooldown    int    `json:"cooldown"`
 	Description string `json:"description"`
 
 	SpikeModifier       float64 `json:"spike_modifier"`

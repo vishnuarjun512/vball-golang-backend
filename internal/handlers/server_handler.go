@@ -1,9 +1,8 @@
-package vps
+package handlers
 
 import (
-	vps "vball/internal/services/vps"
-
 	"fmt"
+	"vball/internal/services"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +21,7 @@ func JoinHandler(c *gin.Context) {
 		return
 	}
 
-	ip, port, err := vps.JoinPlayer_Service(c.Request.Context(), req.PlayerID, req.Region)
+	ip, port, err := services.JoinPlayer_Service(c.Request.Context(), req.PlayerID, req.Region)
 
 	if err != nil {
 		fmt.Printf("Error joining player: %v\n", err)
@@ -49,7 +48,7 @@ func LeaveHandler(c *gin.Context) {
 		return
 	}
 
-	err := vps.LeavePlayer_Service(c.Request.Context(), req.PlayerID)
+	err := services.LeavePlayer_Service(c.Request.Context(), req.PlayerID)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
@@ -77,7 +76,7 @@ func SyncServer_Handler(c *gin.Context) {
 		return
 	}
 
-	err := vps.SyncServerPlayers_Service(
+	err := services.SyncServerPlayers_Service(
 		c.Request.Context(),
 		req.ServerID,
 		req.Players,

@@ -1,4 +1,4 @@
-package vps
+package repositories
 
 import (
 	"context"

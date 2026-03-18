@@ -2,7 +2,6 @@ package region
 
 import (
 	"context"
-	"fmt"
 	"vball/internal/database"
 	"vball/internal/models"
 
@@ -16,7 +15,6 @@ func GetAllRegions_Repo(ctx context.Context) ([]models.Region, error) {
 	rows, err := database.DB.Query(ctx, query)
 
 	if err != nil {
-		fmt.Println("VPS_REPO_ERROR: Cannot find any Regions")
 		return nil, err
 	}
 
@@ -27,19 +25,18 @@ func GetAllRegions_Repo(ctx context.Context) ([]models.Region, error) {
 	return regions, err
 }
 
-func CreateRegion_Repo(ctx context.Context, regionName string) (string, error) {
+func CreateRegion_Repo(ctx context.Context, regionName string, regionCode string) (string, error) {
 
 	query := `
-	INSERT INTO regions (name)
-	VALUES ($1)
+	INSERT INTO regions (region_name, region_code)
+	VALUES ($1,$2)
 	RETURNING id
 	`
 
 	var regionId string
-	err := database.DB.QueryRow(ctx, query, regionName).Scan(&regionId)
+	err := database.DB.QueryRow(ctx, query, regionName, regionCode).Scan(&regionId)
 
 	if err != nil {
-		fmt.Printf("Error Creating Region: %v\n", err)
 		return "", err
 	}
 

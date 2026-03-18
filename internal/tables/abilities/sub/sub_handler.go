@@ -3,83 +3,64 @@ package subAbility
 import (
 	"strconv"
 	"vball/internal/models"
+	"vball/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 func CreateSubAbility(c *gin.Context) {
-
 	var ability models.SubAbility
-
-	if err := c.BindJSON(&ability); err != nil {
-		c.JSON(400, gin.H{"error": "invalid request"})
+	if err := c.ShouldBindJSON(&ability); err != nil {
+		utils.SendError(c, 400, "Invalid request", err)
 		return
 	}
 
-	err := CreateSubAbility_Service(ability)
-
-	if err != nil {
-		c.JSON(500, gin.H{"error": "creation failed"})
+	if err := CreateSubAbility_Service(ability); err != nil {
+		utils.SendError(c, 500, "Creation failed", err)
 		return
 	}
-
-	c.JSON(200, gin.H{"message": "sub ability created"})
+	c.JSON(201, gin.H{"error": false, "message": "Sub ability created"})
 }
 
 func GetSubAbilities(c *gin.Context) {
-
 	abilities, err := GetSubAbilities_Service()
-
 	if err != nil {
-		c.JSON(500, gin.H{"error": "failed"})
+		utils.SendError(c, 500, "Failed to fetch abilities", err)
 		return
 	}
-
-	c.JSON(200, abilities)
+	c.JSON(200, gin.H{"error": false, "abilities": abilities})
 }
 
 func GetSubAbility(c *gin.Context) {
-
 	id, _ := strconv.Atoi(c.Param("id"))
-
 	ability, err := GetSubAbility_Service(id)
-
 	if err != nil {
-		c.JSON(404, gin.H{"error": "not found"})
+		utils.SendError(c, 404, "Sub ability not found", err)
 		return
 	}
-
-	c.JSON(200, ability)
+	c.JSON(200, gin.H{"error": false, "ability": ability})
 }
 
 func UpdateSubAbility(c *gin.Context) {
-
 	id, _ := strconv.Atoi(c.Param("id"))
-
 	var ability models.SubAbility
-
-	c.BindJSON(&ability)
-
-	err := UpdateSubAbility_Service(id, ability)
-
-	if err != nil {
-		c.JSON(500, gin.H{"error": "update failed"})
+	if err := c.ShouldBindJSON(&ability); err != nil {
+		utils.SendError(c, 400, "Invalid input", err)
 		return
 	}
 
-	c.JSON(200, gin.H{"message": "updated"})
+	if err := UpdateSubAbility_Service(id, ability); err != nil {
+		utils.SendError(c, 500, "Update failed", err)
+		return
+	}
+	c.JSON(200, gin.H{"error": false, "message": "Updated Sub Ability"})
 }
 
 func DeleteSubAbility(c *gin.Context) {
-
 	id, _ := strconv.Atoi(c.Param("id"))
-
-	err := DeleteSubAbility_Service(id)
-
-	if err != nil {
-		c.JSON(500, gin.H{"error": "delete failed"})
+	if err := DeleteSubAbility_Service(id); err != nil {
+		utils.SendError(c, 500, "Delete failed", err)
 		return
 	}
-
-	c.JSON(200, gin.H{"message": "deleted"})
+	c.JSON(200, gin.H{"error": false, "message": "Deleted Sub Ability"})
 }

@@ -3,12 +3,11 @@ package routes
 import (
 	"vball/internal/handlers"
 
-	"vball/internal/handlers/vps"
-
 	mainAbility "vball/internal/tables/abilities/main"
 	subAbility "vball/internal/tables/abilities/sub"
 	"vball/internal/tables/gameserver"
 	"vball/internal/tables/machine"
+	player_handler "vball/internal/tables/player"
 	"vball/internal/tables/region"
 
 	"github.com/gin-gonic/gin"
@@ -36,7 +35,7 @@ func SetupRoutes(router *gin.Engine) {
 	player := router.Group("/admin")
 	{
 		player.GET("", handlers.GetAdminLoadOut_Handler)
-		player.GET("/players/:steamid", handlers.GetPlayerBySteamID_Handler)
+		player.GET("/players/:steamid", player_handler.GetPlayerBySteamID_Handler)
 
 	}
 
@@ -84,7 +83,7 @@ func SetupRoutes(router *gin.Engine) {
 		   Endpoint Test
 		   curl -X POST http://localhost:8080/game/matchmaking/join -H "Content-Type: application/json" -d '{"playerId":"steam_999","region":"asia"}'
 		*/
-		game.POST("/matchmaking/join", vps.JoinHandler)
+		game.POST("/matchmaking/join", handlers.JoinHandler)
 
 		{
 			/*
@@ -92,7 +91,7 @@ func SetupRoutes(router *gin.Engine) {
 			   curl -X POST http://localhost:8080/game/matchmaking/leave -H "Content-Type: application/json" -d '{"playerId":"123"}'
 			*/
 		}
-		game.POST("/matchmaking/leave", vps.LeaveHandler)
+		game.POST("/matchmaking/leave", handlers.LeaveHandler)
 
 		/*
 			LOGIC FOR SYNCING SERVER PLAYERS:
@@ -104,6 +103,6 @@ func SetupRoutes(router *gin.Engine) {
 			curl -X POST http://localhost:8080/game/server/sync -H "Content-Type: application/json" -d '{"serverId":4,"players":["steam_123","steam_456","steam_999"]}'
 		*/
 
-		game.POST("/server/sync", vps.SyncServer_Handler)
+		game.POST("/server/sync", handlers.SyncServer_Handler)
 	}
 }

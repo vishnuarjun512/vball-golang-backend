@@ -81,7 +81,7 @@ CREATE TABLE player_abilities (
 -- Servers table to track game servers and their status
 CREATE TABLE servers (
     id TEXT PRIMARY KEY,
-    region TEXT,
+   region TEXT,
     max_players INTEGER,
     current_players INTEGER,
     game_mode TEXT,
@@ -112,7 +112,7 @@ CREATE TABLE activity_logs (
 CREATE TABLE regions (
     id SERIAL PRIMARY KEY,
     region_name VARCHAR(50) UNIQUE NOT NULL,
-    region_code VARCHAR(50) 
+    region_code VARCHAR(50)
 );
 
 -- Machines
