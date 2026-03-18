@@ -87,3 +87,9 @@ func GetPlayerBySteamID_Repo(ctx context.Context, steamID string) (*models.Playe
 
 	return &player, nil
 }
+
+func DeletePlayer_Repo(ctx context.Context, steamId string) error {
+	query := `DELETE FROM players WHERE steamId=$1`
+	_, err := database.DB.Exec(ctx, query, steamId)
+	return err
+}

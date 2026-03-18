@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"fmt"
 	"vball/internal/services"
+	"vball/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,15 +17,14 @@ func JoinHandler(c *gin.Context) {
 	var req JoinRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, err)
+		utils.SendError(c, 400, "Invalid Request Body:", err)
 		return
 	}
 
 	ip, port, err := services.JoinPlayer_Service(c.Request.Context(), req.PlayerID, req.Region)
 
 	if err != nil {
-		fmt.Printf("Error joining player: %v\n", err)
-		c.JSON(500, gin.H{"error": err.Error()})
+		utils.SendError(c, 500, "Error joining player:", err)
 		return
 	}
 
@@ -44,14 +43,14 @@ func LeaveHandler(c *gin.Context) {
 	var req LeaveRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		utils.SendError(c, 400, "Invalid Request Body:", err)
 		return
 	}
 
 	err := services.LeavePlayer_Service(c.Request.Context(), req.PlayerID)
 
 	if err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
+		utils.SendError(c, 500, "Failed to Leave Player Service:", err)
 		return
 	}
 
@@ -70,9 +69,7 @@ func SyncServer_Handler(c *gin.Context) {
 	var req SyncRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, gin.H{
-			"error": err.Error(),
-		})
+		utils.SendError(c, 400, "Invalid Request Body:", err)
 		return
 	}
 
@@ -83,9 +80,7 @@ func SyncServer_Handler(c *gin.Context) {
 	)
 
 	if err != nil {
-		c.JSON(500, gin.H{
-			"error": err.Error(),
-		})
+		utils.SendError(c, 400, "Failed to Sync Server Players:", err)
 		return
 	}
 

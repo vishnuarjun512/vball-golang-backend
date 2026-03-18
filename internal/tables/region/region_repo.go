@@ -3,12 +3,11 @@ package region
 import (
 	"context"
 	"vball/internal/database"
-	"vball/internal/models"
 
 	"github.com/jackc/pgx/v5"
 )
 
-func GetAllRegions_Repo(ctx context.Context) ([]models.Region, error) {
+func GetAllRegions_Repo(ctx context.Context) ([]Region, error) {
 
 	query := `SELECT id,region_name,region_code from regions`
 
@@ -20,7 +19,7 @@ func GetAllRegions_Repo(ctx context.Context) ([]models.Region, error) {
 
 	defer rows.Close()
 
-	regions, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.Region])
+	regions, err := pgx.CollectRows(rows, pgx.RowToStructByName[Region])
 
 	return regions, err
 }
@@ -63,4 +62,12 @@ func DeleteRegion_Repo(ctx context.Context, id string) error {
 	_, err := database.DB.Exec(ctx, query, id)
 
 	return err
+}
+
+func GetRegion_Repo(ctx context.Context, id string) (Region, error) {
+	query := `SELECT FROM regions WHERE id=$1`
+
+	var region Region
+	err := database.DB.QueryRow(ctx, query, id).Scan(&region)
+	return region, err
 }

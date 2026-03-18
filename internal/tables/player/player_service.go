@@ -41,3 +41,13 @@ func GetSteamLogin_Service(steamID string, username string) (*models.PlayerAdmin
 func GetPlayerBySteamID_Service(steamID string) (*models.PlayerAdmin, error) {
 	return GetPlayerBySteamID_Repo(context.Background(), steamID)
 }
+
+func CreatePlayer_Service(steamID string, username string) (string, error) {
+	ctx := context.Background()
+	return CreatePlayer_Repo(ctx, steamID, username)
+}
+
+func DeletePlayer_Service(steamId string) error {
+	ctx := context.Background()
+	return DeletePlayer_Repo(ctx, steamId)
+}

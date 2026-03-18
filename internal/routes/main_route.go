@@ -2,8 +2,7 @@ package routes
 
 import (
 	"vball/internal/handlers"
-
-	player_handler "vball/internal/tables/player"
+	"vball/internal/tables/player"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,11 +10,10 @@ import (
 func SetupRoutes(router *gin.Engine) {
 
 	// PLAYER ROUTES
-	player := router.Group("/admin")
+	player_route := router.Group("/admin")
 	{
-		player.GET("", handlers.GetAdminLoadOut_Handler)
-		player.GET("/players/:steamid", player_handler.GetPlayerBySteamID_Handler)
-
+		player_route.GET("", handlers.GetAdminLoadOut_Handler)
+		player_route.GET("/players/:steamid", player.GetPlayerBySteamID_Handler)
 	}
 
 	// GAME RUNTIME ROUTES
@@ -39,10 +37,12 @@ func SetupRoutes(router *gin.Engine) {
 		*/
 
 		game.GET("/abilities", handlers.GetGameAbilities)
+
 		/*
 		   Endpoint Test
 		   curl -X POST http://localhost:8080/game/matchmaking/join -H "Content-Type: application/json" -d '{"playerId":"steam_999","region":"asia"}'
 		*/
+
 		game.POST("/matchmaking/join", handlers.JoinHandler)
 
 		{

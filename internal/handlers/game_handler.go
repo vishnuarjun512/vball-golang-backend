@@ -1,8 +1,10 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
+
+	"vball/utils"
+
 	"vball/internal/services"
 	"vball/internal/tables/gameserver"
 	"vball/internal/tables/machine"
@@ -17,47 +19,31 @@ func GetAdminLoadOut_Handler(c *gin.Context) {
 	players, err := services.GetAdminLoadOut_Service()
 
 	if err != nil {
-		fmt.Println("Error fetching players:", err)
-		c.JSON(500, gin.H{
-			"error": "failed to load players",
-		})
+		utils.SendError(c, 500, "Error fetching players:", err)
 		return
 	}
 
 	mainAbilities, subAbilities, err := services.GetAllAbilities_Service()
-
 	if err != nil {
-		fmt.Println("Error fetching abilities:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to load abilities",
-		})
+		utils.SendError(c, 500, "Error fetching Abilites", err)
 		return
 	}
 
 	regions, err := region.GetRegions_Service()
 	if err != nil {
-		fmt.Println("Error fetching regions:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to load regions",
-		})
+		utils.SendError(c, 500, "Error fetching Regions", err)
 		return
 	}
 
 	machines, err := machine.GetAllMachines_Service()
 	if err != nil {
-		fmt.Println("Error fetching Machines:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to load Machines",
-		})
+		utils.SendError(c, 500, "Error fetching Machines:", err)
 		return
 	}
 
 	gameServers, err := gameserver.GetAllGameServers_Service()
 	if err != nil {
-		fmt.Println("Error fetching Game Servers:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to load Game Servers",
-		})
+		utils.SendError(c, 500, "Error fetching Gameservers:", err)
 		return
 	}
 
@@ -77,9 +63,7 @@ func GetGameAbilities(c *gin.Context) {
 	mainAbilities, subAbilities, err := services.GetAllAbilities_Service()
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to load abilities",
-		})
+		utils.SendError(c, 500, "Failed to load abilities:", err)
 		return
 	}
 
@@ -95,18 +79,16 @@ type SteamLoginRequest struct {
 }
 
 func GetSteamLogin_Handler(c *gin.Context) {
-	// bind incoming JSON into the request struct
 	var req SteamLoginRequest
+
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		utils.SendError(c, 500, "Invalid request body", err)
 		return
 	}
 
 	redirectURL, err := player.GetSteamLogin_Service(req.SteamID, req.Username)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to get steam login URL",
-		})
+		utils.SendError(c, 500, "Failed to get steam login URL:", err)
 		return
 	}
 

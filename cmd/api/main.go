@@ -29,8 +29,8 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	routes.SetupTableRoutes(router)
 	routes.SetupRoutes(router)
+	routes.SetupTableRoutes(router)
 
 	// Get port (default 8080)
 	port := os.Getenv("PORT")

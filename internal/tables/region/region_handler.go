@@ -8,11 +8,6 @@ import (
 	"vball/utils"
 )
 
-type RegionReq struct {
-	RegionName string `json:"region_name"`
-	RegionCode string `json:"region_code"`
-}
-
 func GetAllRegions_Hanlder(c *gin.Context) {
 	regions, err := GetRegions_Service()
 	if err != nil {
@@ -91,4 +86,27 @@ func DeleteRegion_Handler(c *gin.Context) {
 		"error":   false,
 		"message": "Deleted Region Successfully",
 	})
+}
+
+func GetRegion_Handler(c *gin.Context) {
+
+	id := c.Param("id")
+	if id == "" {
+		utils.SendError(c, http.StatusBadRequest, "RegionID received Empty", nil)
+		return
+	}
+
+	region, err := GetRegion_Service(id)
+
+	if err != nil {
+		utils.SendError(c, http.StatusInternalServerError, "Error Finding Region", err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"error":   false,
+		"message": "Found Region Successfully",
+		"region":  region,
+	})
+
 }
