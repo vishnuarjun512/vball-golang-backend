@@ -1,4 +1,4 @@
-package models
+package mainAbility
 
 type CreateAbilityRequest struct {
 	Name        string `json:"name"`
@@ -32,16 +32,4 @@ type MainAbility struct {
 	SetModifier         float64 `db:"set_modifier" json:"set_modifier"`
 	ReceiveModifier     float64 `db:"receive_modifier" json:"receive_modifier"`
 	BallForceMultiplier float64 `db:"ball_force_multiplier" json:"ball_force_multiplier"`
-}
-
-type SubAbility struct {
-	ID int `db:"id" json:"id"`
-
-	Name        string `db:"name" json:"name"`
-	Description string `db:"description" json:"description"`
-
-	Tier string `db:"tier" json:"tier"`
-
-	ModifierType  string  `db:"modifier_type" json:"modifier_type"`
-	ModifierValue float64 `db:"modifier_value" json:"modifier_value"`
 }

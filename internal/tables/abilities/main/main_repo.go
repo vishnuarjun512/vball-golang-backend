@@ -4,12 +4,11 @@ import (
 	"context"
 	"fmt"
 	"vball/internal/database"
-	"vball/internal/models"
 
 	"github.com/jackc/pgx/v5"
 )
 
-func CreateMainAbility_Repo(ctx context.Context, ability models.CreateAbilityRequest) (*models.MainAbility, error) {
+func CreateMainAbility_Repo(ctx context.Context, ability CreateAbilityRequest) (*MainAbility, error) {
 
 	query := `
 	INSERT INTO main_abilities
@@ -43,7 +42,7 @@ func CreateMainAbility_Repo(ctx context.Context, ability models.CreateAbilityReq
 	return GetMainAbility_Repo(ctx, id)
 }
 
-func GetMainAbilities_Repo(ctx context.Context) ([]models.MainAbility, error) {
+func GetMainAbilities_Repo(ctx context.Context) ([]MainAbility, error) {
 
 	query := `
 	SELECT
@@ -68,7 +67,7 @@ func GetMainAbilities_Repo(ctx context.Context) ([]models.MainAbility, error) {
 	}
 	defer rows.Close()
 
-	abilities, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.MainAbility])
+	abilities, err := pgx.CollectRows(rows, pgx.RowToStructByName[MainAbility])
 
 	if err != nil {
 		return nil, err
@@ -77,7 +76,7 @@ func GetMainAbilities_Repo(ctx context.Context) ([]models.MainAbility, error) {
 	return abilities, nil
 }
 
-func GetMainAbility_Repo(ctx context.Context, id int) (*models.MainAbility, error) {
+func GetMainAbility_Repo(ctx context.Context, id int) (*MainAbility, error) {
 
 	query := `
 	SELECT
@@ -103,7 +102,7 @@ func GetMainAbility_Repo(ctx context.Context, id int) (*models.MainAbility, erro
 	}
 	defer rows.Close()
 
-	abilities, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.MainAbility])
+	abilities, err := pgx.CollectRows(rows, pgx.RowToStructByName[MainAbility])
 
 	if err != nil {
 		return nil, err
@@ -116,7 +115,7 @@ func GetMainAbility_Repo(ctx context.Context, id int) (*models.MainAbility, erro
 	return &abilities[0], nil
 }
 
-func UpdateMainAbility_Repo(ctx context.Context, id int, ability models.MainAbility) error {
+func UpdateMainAbility_Repo(ctx context.Context, id int, ability MainAbility) error {
 
 	query := `
 	UPDATE main_abilities

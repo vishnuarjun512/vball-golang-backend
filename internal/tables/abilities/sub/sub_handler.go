@@ -2,14 +2,14 @@ package subAbility
 
 import (
 	"strconv"
-	"vball/internal/models"
+
 	"vball/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 func CreateSubAbility(c *gin.Context) {
-	var ability models.SubAbility
+	var ability SubAbility
 	if err := c.ShouldBindJSON(&ability); err != nil {
 		utils.SendError(c, 400, "Invalid request", err)
 		return
@@ -43,7 +43,7 @@ func GetSubAbility(c *gin.Context) {
 
 func UpdateSubAbility(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	var ability models.SubAbility
+	var ability SubAbility
 	if err := c.ShouldBindJSON(&ability); err != nil {
 		utils.SendError(c, 400, "Invalid input", err)
 		return

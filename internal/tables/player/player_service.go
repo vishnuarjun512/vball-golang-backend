@@ -2,34 +2,40 @@ package player
 
 import (
 	"context"
-	"fmt"
+	"database/sql"
+	"errors"
 	"vball/internal/models"
 )
 
 func GetSteamLogin_Service(steamID string, username string) (*models.PlayerAdmin, error) {
+	ctx := context.Background()
 
-	player, err := GetPlayerBySteamID_Repo(context.Background(), steamID)
+	// 1. Try to find the player
+	player, err := GetPlayerBySteamID_Repo(ctx, steamID)
 
-	if err == nil && player != nil {
-		fmt.Printf("Player with SteamID %s already exists. Returning existing player.\n", steamID)
+	// 2. If no error, return the player
+	if err == nil {
 		return player, nil
 	}
 
-	playerID, err := CreatePlayer_Repo(context.Background(), steamID, username)
-
-	if err != nil {
-		fmt.Printf("Error creating player: %v\n", err)
+	// 3. If error is NOT "sql.ErrNoRows", something went wrong with DB
+	if !errors.Is(err, sql.ErrNoRows) {
 		return nil, err
 	}
 
-	err = CreatePlayerAbilities_Repo(context.Background(), playerID)
-
+	// 4. Player doesn't exist -> Create them
+	playerID, err := CreatePlayer_Repo(ctx, steamID, username)
 	if err != nil {
-		fmt.Printf("Error creating player abilities: %v\n", err)
 		return nil, err
 	}
 
-	return GetPlayerBySteamID_Repo(context.Background(), steamID)
+	// 5. Initialize their abilities table
+	if err := CreatePlayerAbilities_Repo(ctx, playerID); err != nil {
+		return nil, err
+	}
+
+	// 6. Return the newly created player
+	return GetPlayerBySteamID_Repo(ctx, steamID)
 }
 
 func GetPlayerBySteamID_Service(steamID string) (*models.PlayerAdmin, error) {

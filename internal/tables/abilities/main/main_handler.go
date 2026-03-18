@@ -4,14 +4,13 @@ import (
 	"net/http"
 	"strconv"
 
-	"vball/internal/models"
 	"vball/utils" // Import your new helper
 
 	"github.com/gin-gonic/gin"
 )
 
 func CreateMainAbility(c *gin.Context) {
-	var newAbility models.CreateAbilityRequest
+	var newAbility CreateAbilityRequest
 
 	if err := c.ShouldBindJSON(&newAbility); err != nil {
 		utils.SendError(c, http.StatusBadRequest, "Invalid request body", err)
@@ -71,7 +70,7 @@ func UpdateMainAbility(c *gin.Context) {
 		return
 	}
 
-	var ability models.MainAbility
+	var ability MainAbility
 	if err := c.ShouldBindJSON(&ability); err != nil {
 		utils.SendError(c, http.StatusBadRequest, "Invalid JSON input", err)
 		return

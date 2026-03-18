@@ -3,10 +3,9 @@ package subAbility
 import (
 	"context"
 	"vball/internal/database"
-	"vball/internal/models"
 )
 
-func CreateSubAbility_Repo(ctx context.Context, ability models.SubAbility) error {
+func CreateSubAbility_Repo(ctx context.Context, ability SubAbility) error {
 
 	query := `
 	INSERT INTO sub_abilities
@@ -25,7 +24,7 @@ func CreateSubAbility_Repo(ctx context.Context, ability models.SubAbility) error
 	return err
 }
 
-func GetSubAbilities_Repo(ctx context.Context) ([]models.SubAbility, error) {
+func GetSubAbilities_Repo(ctx context.Context) ([]SubAbility, error) {
 
 	query := `SELECT id,name,description,tier,modifier_type,modifier_value FROM sub_abilities`
 
@@ -36,11 +35,11 @@ func GetSubAbilities_Repo(ctx context.Context) ([]models.SubAbility, error) {
 
 	defer rows.Close()
 
-	var abilities []models.SubAbility
+	var abilities []SubAbility
 
 	for rows.Next() {
 
-		var ability models.SubAbility
+		var ability SubAbility
 
 		err := rows.Scan(
 			&ability.ID,
@@ -61,7 +60,7 @@ func GetSubAbilities_Repo(ctx context.Context) ([]models.SubAbility, error) {
 	return abilities, nil
 }
 
-func GetSubAbility_Repo(ctx context.Context, id int) (*models.SubAbility, error) {
+func GetSubAbility_Repo(ctx context.Context, id int) (*SubAbility, error) {
 
 	query := `
 	SELECT id,name,description,tier,modifier_type,modifier_value
@@ -71,7 +70,7 @@ func GetSubAbility_Repo(ctx context.Context, id int) (*models.SubAbility, error)
 
 	row := database.DB.QueryRow(ctx, query, id)
 
-	var ability models.SubAbility
+	var ability SubAbility
 
 	err := row.Scan(
 		&ability.ID,
@@ -89,7 +88,7 @@ func GetSubAbility_Repo(ctx context.Context, id int) (*models.SubAbility, error)
 	return &ability, nil
 }
 
-func UpdateSubAbility_Repo(ctx context.Context, id int, ability models.SubAbility) error {
+func UpdateSubAbility_Repo(ctx context.Context, id int, ability SubAbility) error {
 
 	query := `
 	UPDATE sub_abilities

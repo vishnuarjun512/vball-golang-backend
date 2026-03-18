@@ -2,22 +2,21 @@ package subAbility
 
 import (
 	"context"
-	"vball/internal/models"
 )
 
-func CreateSubAbility_Service(ability models.SubAbility) error {
+func CreateSubAbility_Service(ability SubAbility) error {
 	return CreateSubAbility_Repo(context.Background(), ability)
 }
 
-func GetSubAbilities_Service() ([]models.SubAbility, error) {
+func GetSubAbilities_Service() ([]SubAbility, error) {
 	return GetSubAbilities_Repo(context.Background())
 }
 
-func GetSubAbility_Service(id int) (*models.SubAbility, error) {
+func GetSubAbility_Service(id int) (*SubAbility, error) {
 	return GetSubAbility_Repo(context.Background(), id)
 }
 
-func UpdateSubAbility_Service(id int, ability models.SubAbility) error {
+func UpdateSubAbility_Service(id int, ability SubAbility) error {
 	return UpdateSubAbility_Repo(context.Background(), id, ability)
 }
 

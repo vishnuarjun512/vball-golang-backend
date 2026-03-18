@@ -5,6 +5,9 @@ import (
 	"vball/internal/database"
 	"vball/internal/models"
 
+	mainAbility "vball/internal/tables/abilities/main"
+	subAbility "vball/internal/tables/abilities/sub"
+
 	"github.com/jackc/pgx/v5"
 )
 
@@ -88,7 +91,7 @@ func GetAdminLoadout_Repo(ctx context.Context) ([]models.PlayerAdmin, error) {
 	return players, nil
 }
 
-func GetAllAbilities_Repo(ctx context.Context) ([]models.MainAbility, []models.SubAbility, error) {
+func GetAllAbilities_Repo(ctx context.Context) ([]mainAbility.MainAbility, []subAbility.SubAbility, error) {
 
 	mainRows, err := database.DB.Query(ctx, `
 		SELECT
@@ -113,7 +116,7 @@ func GetAllAbilities_Repo(ctx context.Context) ([]models.MainAbility, []models.S
 
 	defer mainRows.Close()
 
-	mainAbilities, err := pgx.CollectRows(mainRows, pgx.RowToStructByName[models.MainAbility])
+	mainAbilities, err := pgx.CollectRows(mainRows, pgx.RowToStructByName[mainAbility.MainAbility])
 
 	if err != nil {
 		return nil, nil, err
@@ -136,7 +139,7 @@ func GetAllAbilities_Repo(ctx context.Context) ([]models.MainAbility, []models.S
 
 	defer subRows.Close()
 
-	subAbilities, err := pgx.CollectRows(subRows, pgx.RowToStructByName[models.SubAbility])
+	subAbilities, err := pgx.CollectRows(subRows, pgx.RowToStructByName[subAbility.SubAbility])
 
 	if err != nil {
 		return nil, nil, err
