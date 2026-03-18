@@ -41,16 +41,16 @@ func SetupTableRoutes(router *gin.Engine) {
 	machine_route := router.Group("/machine")
 	{
 		machine_route.GET("", machine.GetAllMachines_Handler)
-		// machine_router.POST("", region.CreateMachine_Handler)
-		// machine_router.GET("/:id", region.GetMachine_Handler)
-		// machine_router.PATCH("/:id", region.UpdateMachine_Handler)
-		// machine_router.DELETE("/:id", region.DeleteMachine_Handler)
+		machine_route.POST("", machine.CreateMachine_Handler)
+		machine_route.GET("/:id", machine.GetMachine_Handler)
+		machine_route.PATCH("/:id", machine.UpdateMachine_Handler)
+		machine_route.DELETE("/:id", machine.DeleteMachine_Hander)
 	}
 
-	game_server := router.Group(("/gameserver"))
+	gameserver_route := router.Group(("/gameserver"))
 	{
-		game_server.POST("", gameserver.CreateGameServer_Handler)
-		game_server.GET("/:id", gameserver.GetGameServer_Handler)
+		gameserver_route.POST("", gameserver.CreateGameServer_Handler)
+		gameserver_route.GET("/:id", gameserver.GetGameServer_Handler)
 	}
 
 	player_route := router.Group("/player")
