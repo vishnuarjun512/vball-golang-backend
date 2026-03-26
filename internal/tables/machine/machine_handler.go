@@ -16,8 +16,17 @@ func GetAllMachines_Handler(c *gin.Context) {
 	c.JSON(200, gin.H{"error": false, "machines": machines})
 }
 
+type MachineCreateReq struct {
+	ID          int    `json:"id"`
+	MachineName string `json:"machine_name"`
+	RegionID    int    `json:"region_id"`
+	Status      string `json:"status"`
+	PortStart   int    `json:"port_start"`
+	PortEnd     int    `json:"port_end"`
+}
+
 func CreateMachine_Handler(c *gin.Context) {
-	var m MachineSend // Frontend sends the port range
+	var m MachineCreateReq // Frontend sends the port range
 	if err := c.ShouldBindJSON(&m); err != nil {
 		utils.SendError(c, 400, "Invalid input", err)
 		return
@@ -28,7 +37,8 @@ func CreateMachine_Handler(c *gin.Context) {
 		utils.SendError(c, 500, "Creation failed", err)
 		return
 	}
-	c.JSON(201, gin.H{"error": false, "id": id, "message": "Machine Created"})
+	machine, err := GetMachine_Service(id)
+	c.JSON(201, gin.H{"error": false, "id": id, "message": "Machine Created", "machine": machine})
 }
 
 func UpdateMachine_Handler(c *gin.Context) {

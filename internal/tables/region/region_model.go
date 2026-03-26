@@ -6,7 +6,7 @@ type RegionReq struct {
 }
 
 type Region struct {
-	ID         string `db:"id" json:"id"`
+	ID         int    `db:"id" json:"id"`
 	RegionName string `db:"region_name" json:"region_name"`
 	RegionCode string `db:"region_code" json:"region_code"`
 }

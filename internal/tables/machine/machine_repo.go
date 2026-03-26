@@ -8,7 +8,7 @@ import (
 func GetAllMachines_Repo(ctx context.Context) ([]MachineSend, error) {
 	// We select into a temporary struct that matches the DB columns exactly
 	query := `
-		SELECT id, region_id, ip_address, cpu_cores, ram_gb, status, port_start, port_end, created_at
+		SELECT id, machine_name, region_id, ip_address, cpu_cores, ram_gb, status, port_start, port_end, created_at
 		FROM machines
 	`
 
@@ -25,7 +25,7 @@ func GetAllMachines_Repo(ctx context.Context) ([]MachineSend, error) {
 		var m MachineSend
 		// We do NOT scan available_ports here because the types don't match (int vs []int)
 		err := rows.Scan(
-			&m.ID, &m.RegionID, &m.IPAddress, &m.CPUCores,
+			&m.ID, &m.MachineName, &m.RegionID, &m.IPAddress, &m.CPUCores,
 			&m.RAMGB, &m.Status, &m.PortStart, &m.PortEnd, &m.CreatedAt,
 		)
 		if err != nil {

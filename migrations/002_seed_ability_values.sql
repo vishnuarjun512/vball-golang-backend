@@ -156,13 +156,13 @@ ON CONFLICT DO NOTHING;
 
 
 -- VPS Machines:
-INSERT INTO machines
-(region_id, ip_address, cpu_cores, ram_gb, status, port_start, port_end, available_ports)
+INSERT INTO machines 
+(region_id, machine_name, ip_address, cpu_cores, ram_gb, status, port_start, port_end, available_ports)
 VALUES
-(2,'144.76.55.21',8,16,'active',7000,7008,8),
-(3,'103.21.44.12',4,8,'stopped',8000,8004,4),
-(1,'52.91.210.10',8,16,'maintenance',8200,8208,8),
-(2,'142.21.77.12',16,64,'active',6000,6016,16)
+(2, 'EU - M1', '144.76.55.21', 8, 16, 'active', 7000, 7008, 8),
+(3, 'AS - M1', '103.21.44.12', 4, 8, 'stopped', 8000, 8004, 4),
+(1, 'NA - M1', '52.91.210.10', 8, 16, 'maintenance', 8200, 8208, 8),
+(2, 'EU - M2', '142.21.77.12', 16, 64, 'active', 6000, 6016, 16)
 ON CONFLICT DO NOTHING;
 
 -- Ports

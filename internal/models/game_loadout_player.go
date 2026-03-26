@@ -35,7 +35,7 @@ type GameServer struct {
 	CurrentPlayers int       `db:"current_players" json:"current_players"`
 	Status         string    `db:"status" json:"status"`
 	Uptime         time.Time `db:"uptime" json:"uptime"`
-	CreatedAt      time.Time `db:"createdAt" json:"createdAt"`
+	CreatedAt      time.Time `db:"created_at" json:"createdAt"`
 }
 
 type Match struct {

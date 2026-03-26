@@ -4,6 +4,7 @@ import "time"
 
 type MachineDB struct {
 	ID             int       `json:"id"`
+	MachineName    string    `json:"machine_name"`
 	RegionID       int       `json:"region_id"`
 	IPAddress      string    `json:"ip_address"`
 	CPUCores       int       `json:"cpu_cores"`
@@ -17,6 +18,7 @@ type MachineDB struct {
 
 type MachineSend struct {
 	ID             int       `json:"id"`
+	MachineName    string    `json:"machine_name"`
 	RegionID       int       `json:"region_id"`
 	IPAddress      string    `json:"ip_address"`
 	CPUCores       int       `json:"cpu_cores"`

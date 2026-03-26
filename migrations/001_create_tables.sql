@@ -118,6 +118,7 @@ CREATE TABLE regions (
 -- Machines
 CREATE TABLE machines (
     id SERIAL PRIMARY KEY,
+    machine_name VARCHAR(20),
     region_id INT REFERENCES regions(id) ON DELETE CASCADE,
     ip_address VARCHAR(100) UNIQUE NOT NULL,
     cpu_cores INT NOT NULL,

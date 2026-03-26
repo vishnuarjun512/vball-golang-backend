@@ -108,7 +108,8 @@ func GetAllGameServers_Repo(ctx context.Context) ([]models.GameServer, error) {
 			max_players,
 			current_players,
 			status,
-			uptime
+			uptime,
+			created_at
 		FROM game_servers
 	`
 
