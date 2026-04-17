@@ -21,6 +21,8 @@ type PlayerAdmin struct {
 
 	BanStatus string `json:"banStatus"`
 
+	CurrentServer int `json:"current_server"`
+
 	MatchesPlayed int `json:"matchesPlayed"`
 	Wins          int `json:"wins"`
 	Losses        int `json:"losses"`
